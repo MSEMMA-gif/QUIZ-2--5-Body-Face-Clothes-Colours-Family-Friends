@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="vi" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Đua Top Từ Vựng Tiếng Anh - Body, Clothes, Colours & Family</title>
+  
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#0f172a">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+    
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .perspective-1000 { perspective: 1000px; }
+    .transform-style-3d { transform-style: preserve-3d; }
+    .backface-hidden { backface-visibility: hidden; }
+    .rotate-y-180 { transform: rotateY(180deg); }
+
+    .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+    .shake { animation: shake 0.4s ease-in-out; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-slate-950">
+
+  <!-- TOP HEADER -->
+  <header class="bg-slate-900/90 backdrop-blur-md border-b border-slate-800 sticky top-0 z-40 px-4 py-3">
+    <div class="max-w-md mx-auto flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-orange-500 flex items-center justify-center font-black text-slate-950 text-lg shadow-lg shadow-orange-500/20">
+          🌟
+        </div>
+        <div>
+          <h1 class="font-extrabold text-sm text-amber-400 uppercase tracking-wider">Vocab Arena</h1>
+          <div id="userBadge" class="text-xs text-slate-300 font-semibold flex items-center gap-1">
+            <span id="displayStudentName">Khách</span>
+            <span class="text-slate-500">•</span>
+            <span id="displayStudentClass" class="text-slate-400">Chưa nhập</span>
+            <button onclick="openLoginModal()" class="ml-1 text-amber-400 hover:text-amber-300 underline text-[10px]">
+              (Đổi)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Stats & Teacher Portal Toggle -->
+      <div class="flex items-center space-x-2">
+        <div class="bg-slate-800/80 border border-slate-700/50 rounded-lg px-2.5 py-1 text-center">
+          <div class="text-[10px] text-slate-400 uppercase font-bold">Đã thuộc</div>
+          <div id="headerMasteredCount" class="text-xs font-black text-emerald-400">0/100</div>
+        </div>
+        <button onclick="openTeacherAdmin()" class="bg-amber-500/10 border border-amber-500/30 text-amber-400 p-2 rounded-lg hover:bg-amber-500/20 active:scale-95 transition" title="Góc Giáo Viên">
+          <i class="fa-solid fa-user-gear text-sm"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="flex-1 max-w-md w-full mx-auto p-4 pb-24 flex flex-col justify-start">
+
+    <!-- ZALO NOTICE -->
+    <div id="zaloNotice" class="hidden bg-amber-500/10 border border-amber-500/30 rounded-xl p-2.5 mb-3 text-xs text-amber-300 flex items-center justify-between">
+      <span>💡 Bấm <b>⋮</b> chọn <b>"Mở bằng Chrome/Safari"</b> để lưu tiến độ tốt nhất!</span>
+      <button onclick="document.getElementById('zaloNotice').remove()" class="text-amber-400 font-bold ml-2">✕</button>
+    </div>
+
+    <!-- MASTERY PROGRESS BAR -->
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 mb-4">
+      <div class="flex justify-between items-center text-xs font-bold mb-1.5">
+        <span class="text-slate-300 flex items-center gap-1.5">
+          <i class="fa-solid fa-circle-check text-emerald-400"></i> Tiến độ thuộc bài (Tự động lưu)
+        </span>
+        <span id="masteryPercentText" class="text-emerald-400">0%</span>
+      </div>
+      <div class="w-full bg-slate-800 rounded-full h-2.5 overflow-hidden">
+        <div id="masteryProgressBar" class="bg-gradient-to-r from-emerald-500 to-teal-400 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+      </div>
+    </div>
+
+    <!-- CATEGORY FILTER SELECTOR -->
+    <div class="flex gap-1.5 overflow-x-auto pb-3 custom-scrollbar text-xs font-bold">
+      <button onclick="selectMainCategory('all')" id="catbtn-all" class="cat-filter-btn active bg-amber-500 text-slate-950 px-3 py-1.5 rounded-xl whitespace-nowrap shadow-sm">Tất cả</button>
+      <button onclick="selectMainCategory('Cơ thể & Mặt')" id="catbtn-body" class="cat-filter-btn bg-slate-900 text-slate-300 border border-slate-800 px-3 py-1.5 rounded-xl whitespace-nowrap">💪 Cơ thể & Mặt</button>
+      <button onclick="selectMainCategory('Quần áo')" id="catbtn-clothes" class="cat-filter-btn bg-slate-900 text-slate-300 border border-slate-800 px-3 py-1.5 rounded-xl whitespace-nowrap">👕 Quần áo</button>
+      <button onclick="selectMainCategory('Màu sắc')" id="catbtn-colours" class="cat-filter-btn bg-slate-900 text-slate-300 border border-slate-800 px-3 py-1.5 rounded-xl whitespace-nowrap">🎨 Màu sắc</button>
+      <button onclick="selectMainCategory('Gia đình & Bạn bè')" id="catbtn-family" class="cat-filter-btn bg-slate-900 text-slate-300 border border-slate-800 px-3 py-1.5 rounded-xl whitespace-nowrap">👨‍👩‍👧 Gia đình & Bạn bè</button>
+    </div>
+
+    <!-- TAB 1: FLASHCARDS -->
+    <section id="tab-flashcards" class="tab-content flex flex-col gap-4">
+      <div class="flex justify-between items-center bg-slate-900 p-2.5 rounded-xl border border-slate-800">
+        <span class="text-xs font-bold text-slate-400">Luyện thẻ ghi nhớ</span>
+        <label class="inline-flex items-center cursor-pointer">
+          <input type="checkbox" id="onlyUnmasteredToggle" onchange="toggleFilterUnmastered()" class="sr-only peer">
+          <div class="w-9 h-5 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-amber-500 relative"></div>
+          <span class="ml-2 text-xs font-bold text-slate-300">Chỉ từ chưa thuộc</span>
+        </label>
+      </div>
+
+      <div class="perspective-1000 w-full h-72">
+        <div id="flashcard" onclick="flipCard()" class="w-full h-full relative transform-style-3d transition-transform duration-500 cursor-pointer shadow-2xl rounded-3xl">
+          <!-- Front Side -->
+          <div class="absolute inset-0 bg-gradient-to-b from-slate-900 to-slate-800 border-2 border-slate-700/80 rounded-3xl p-6 flex flex-col justify-between items-center backface-hidden">
+            <div class="w-full flex justify-between items-center text-xs font-bold text-slate-400">
+              <span id="fcCategory" class="bg-slate-800 px-3 py-1 rounded-full border border-slate-700">Chủ đề</span>
+              <span id="fcNumber">1/100</span>
+            </div>
+            <div class="text-center my-auto">
+              <div class="text-xs font-bold text-amber-400 uppercase tracking-widest mb-1">Tiếng Việt</div>
+              <div id="fcVietnamese" class="text-3xl font-black text-white drop-shadow-md">Nghĩa tiếng Việt</div>
+              <div class="text-xs text-slate-400 mt-3 flex items-center justify-center gap-1">
+                <i class="fa-solid fa-rotate text-amber-400"></i> Chạm để xem Tiếng Anh
+              </div>
+            </div>
+            <div class="w-full flex justify-center">
+              <span id="fcStatusBadge" class="text-xs font-bold px-3 py-1 rounded-full bg-slate-800 text-slate-400">Chưa thuộc</span>
+            </div>
+          </div>
+
+          <!-- Back Side -->
+          <div class="absolute inset-0 bg-gradient-to-b from-amber-950/40 via-slate-900 to-slate-900 border-2 border-amber-500/50 rounded-3xl p-6 flex flex-col justify-between items-center backface-hidden rotate-y-180">
+            <div class="w-full flex justify-between items-center">
+              <span class="text-xs font-bold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3 py-1 rounded-full">Tiếng Anh</span>
+              <button onclick="event.stopPropagation(); speakCurrentWord();" class="w-9 h-9 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center hover:scale-110 active:scale-95 transition shadow-lg shadow-amber-500/30">
+                <i class="fa-solid fa-volume-high"></i>
+              </button>
+            </div>
+            <div class="text-center my-auto">
+              <div id="fcEnglish" class="text-3xl font-black text-amber-400 tracking-wide">English Word</div>
+              <div id="fcPhonetic" class="text-sm font-semibold text-slate-400 mt-1">/pronunciation/</div>
+            </div>
+            <div class="text-xs text-slate-400">Chạm để lật lại</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 mt-1">
+        <button id="btnMarkUnmastered" onclick="setMasteryStatus(false)" class="py-3 px-4 rounded-xl font-bold text-sm bg-slate-800 border border-rose-500/30 text-rose-400 hover:bg-rose-500/10 active:scale-95 transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-xmark text-lg"></i> Ôn lại (Chưa thuộc)
+        </button>
+        <button id="btnMarkMastered" onclick="setMasteryStatus(true)" class="py-3 px-4 rounded-xl font-bold text-sm bg-emerald-500 text-slate-950 shadow-lg shadow-emerald-500/20 hover:bg-emerald-400 active:scale-95 transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-check text-lg"></i> Đã thuộc bài ✅
+        </button>
+      </div>
+
+      <div class="flex justify-between items-center gap-3">
+        <button onclick="prevCard()" class="flex-1 py-3 rounded-xl bg-slate-800 border border-slate-700 text-slate-200 font-bold text-sm hover:bg-slate-700 active:scale-95 transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-arrow-left"></i> Câu trước
+        </button>
+        <button onclick="nextCard()" class="flex-1 py-3 rounded-xl bg-amber-500 text-slate-950 font-extrabold text-sm shadow-lg shadow-amber-500/20 hover:bg-amber-400 active:scale-95 transition flex items-center justify-center gap-2">
+          Câu tiếp <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+    </section>
+
+    <!-- TAB 2: MULTIPLE CHOICE QUIZ -->
+    <section id="tab-quiz" class="tab-content hidden flex flex-col gap-4">
+      <div class="bg-slate-900 border border-slate-800 p-3.5 rounded-2xl flex items-center justify-between">
+        <div>
+          <div class="text-[10px] uppercase font-bold text-slate-400">Thời gian</div>
+          <div id="quizTimer" class="text-xl font-black text-amber-400">12s</div>
+        </div>
+        <div class="text-center">
+          <div class="text-[10px] uppercase font-bold text-slate-400">Chuỗi Combo</div>
+          <div id="quizStreak" class="text-xl font-black text-orange-500">🔥 0</div>
+        </div>
+        <div class="text-right">
+          <div class="text-[10px] uppercase font-bold text-slate-400">Điểm trận</div>
+          <div id="quizScore" class="text-xl font-black text-emerald-400">0</div>
+        </div>
+      </div>
+
+      <div class="bg-gradient-to-b from-slate-900 to-slate-800 border-2 border-slate-700/80 rounded-3xl p-6 text-center shadow-xl">
+        <span id="quizCategory" class="bg-slate-800 text-slate-400 text-[10px] font-bold px-3 py-1 rounded-full uppercase border border-slate-700">Trắc nghiệm</span>
+        <div class="text-xs font-bold text-amber-400 uppercase tracking-widest mt-4">Từ này tiếng Anh là gì?</div>
+        <div id="quizQuestion" class="text-3xl font-black text-white my-4">Khuôn mặt</div>
+      </div>
+
+      <div id="quizOptions" class="grid grid-cols-1 gap-2.5"></div>
+    </section>
+
+    <!-- TAB 3: TYPING CHALLENGE -->
+    <section id="tab-typing" class="tab-content hidden flex flex-col gap-4">
+      <div class="bg-slate-900 border border-slate-800 p-3.5 rounded-2xl flex items-center justify-between">
+        <div>
+          <div class="text-[10px] uppercase font-bold text-slate-400">Thời gian</div>
+          <div id="typingTimer" class="text-xl font-black text-amber-400">20s</div>
+        </div>
+        <div class="text-center">
+          <div class="text-[10px] uppercase font-bold text-slate-400">Chuỗi Combo</div>
+          <div id="typingStreak" class="text-xl font-black text-orange-500">🔥 0</div>
+        </div>
+        <div class="text-right">
+          <div class="text-[10px] uppercase font-bold text-slate-400">Điểm Viết</div>
+          <div id="typingScore" class="text-xl font-black text-emerald-400">0</div>
+        </div>
+      </div>
+
+      <div id="typingCardContainer" class="bg-gradient-to-b from-slate-900 to-slate-800 border-2 border-slate-700/80 rounded-3xl p-6 text-center shadow-xl space-y-3">
+        <div class="flex justify-between items-center">
+          <span id="typingCategory" class="bg-slate-800 text-slate-400 text-[10px] font-bold px-3 py-1 rounded-full uppercase border border-slate-700">Kiểm tra viết từ</span>
+          <button onclick="speakTypingHint()" class="text-amber-400 hover:text-amber-300 text-xs font-bold flex items-center gap-1">
+            <i class="fa-solid fa-volume-high"></i> Nghe gợi ý
+          </button>
+        </div>
+        
+        <div class="text-xs font-bold text-amber-400 uppercase tracking-widest pt-2">Hãy gõ chính xác từ tiếng Anh:</div>
+        <div id="typingQuestion" class="text-3xl font-black text-white">Khuôn mặt</div>
+        <div id="typingPhoneticHint" class="text-sm text-slate-400 font-semibold">/feɪs/</div>
+
+        <div class="pt-3">
+          <input type="text" id="typingInput" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Nhập từ tiếng Anh vào đây..." class="w-full px-4 py-3.5 bg-slate-950 border-2 border-amber-500/50 rounded-2xl text-center text-lg font-black text-amber-400 focus:outline-none focus:border-amber-400 placeholder-slate-600 transition">
+        </div>
+
+        <div id="typingFeedback" class="text-xs font-bold min-h-[20px] transition"></div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <button onclick="skipTypingQuestion()" class="py-3.5 px-4 rounded-xl font-bold text-sm bg-slate-800 text-slate-400 hover:bg-slate-700 active:scale-95 transition">
+          Bỏ qua (-10pt)
+        </button>
+        <button onclick="checkTypingAnswer()" class="py-3.5 px-4 rounded-xl font-black text-sm bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/20 hover:bg-amber-400 active:scale-95 transition flex items-center justify-center gap-2">
+          Gửi đáp án <i class="fa-solid fa-paper-plane"></i>
+        </button>
+      </div>
+    </section>
+
+    <!-- TAB 4: DICTIONARY -->
+    <section id="tab-dict" class="tab-content hidden flex flex-col gap-3">
+      <div class="sticky top-16 bg-slate-950 pt-1 pb-2 z-20 space-y-2">
+        <div class="relative">
+          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-500 text-sm"></i>
+          <input type="text" id="dictSearch" oninput="renderDictList()" placeholder="Tìm kiếm từ tiếng Việt hoặc Anh..." class="w-full pl-10 pr-4 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-sm focus:outline-none focus:border-amber-500 text-white placeholder-slate-500">
+        </div>
+        <div class="flex gap-2 overflow-x-auto pb-1 text-xs no-scrollbar">
+          <button onclick="filterDictCategory('all')" class="dict-cat-btn active bg-amber-500 text-slate-950 font-bold px-3 py-1.5 rounded-lg whitespace-nowrap">Tất cả</button>
+          <button onclick="filterDictCategory('unmastered')" class="dict-cat-btn bg-slate-900 text-slate-300 font-bold px-3 py-1.5 rounded-lg border border-slate-800 whitespace-nowrap">Chưa thuộc</button>
+          <button onclick="filterDictCategory('mastered')" class="dict-cat-btn bg-slate-900 text-slate-300 font-bold px-3 py-1.5 rounded-lg border border-slate-800 whitespace-nowrap">Đã thuộc</button>
+        </div>
+      </div>
+
+      <div id="dictListContainer" class="flex flex-col gap-2"></div>
+    </section>
+
+    <!-- TAB 5: LEADERBOARD -->
+    <section id="tab-leaderboard" class="tab-content hidden flex flex-col gap-4">
+      <div class="bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-amber-500/20 border border-amber-500/30 rounded-2xl p-4 text-center">
+        <h2 class="text-base font-extrabold text-amber-400 uppercase tracking-wider">🏆 Bảng Xếp Hạng Lớp Học</h2>
+        <p class="text-xs text-slate-300 mt-1">Hệ thống đồng bộ tự động dữ liệu thi đấu!</p>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3">
+        <div class="flex justify-between items-center text-xs font-bold text-slate-400 pb-2 border-b border-slate-800 px-2">
+          <span>Hạng & Thí sinh</span>
+          <span>Điểm cao nhất</span>
+        </div>
+        <div id="leaderboardList" class="flex flex-col gap-2 mt-2"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- NAVIGATION BAR -->
+  <nav class="fixed bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur-lg border-t border-slate-800 z-40 pb-safe">
+    <div class="max-w-md mx-auto grid grid-cols-5 h-16">
+      <button onclick="switchTab('flashcards')" id="nav-flashcards" class="nav-btn active text-amber-400 flex flex-col items-center justify-center gap-1">
+        <i class="fa-solid fa-clone text-base"></i>
+        <span class="text-[9px] font-bold">Thẻ học</span>
+      </button>
+      <button onclick="switchTab('quiz')" id="nav-quiz" class="nav-btn text-slate-400 flex flex-col items-center justify-center gap-1">
+        <i class="fa-solid fa-gamepad text-base"></i>
+        <span class="text-[9px] font-bold">Trắc nghiệm</span>
+      </button>
+      <button onclick="switchTab('typing')" id="nav-typing" class="nav-btn text-slate-400 flex flex-col items-center justify-center gap-1">
+        <i class="fa-solid fa-keyboard text-base"></i>
+        <span class="text-[9px] font-bold">Viết từ</span>
+      </button>
+      <button onclick="switchTab('dict')" id="nav-dict" class="nav-btn text-slate-400 flex flex-col items-center justify-center gap-1">
+        <i class="fa-solid fa-book-bookmark text-base"></i>
+        <span class="text-[9px] font-bold">Sổ từ</span>
+      </button>
+      <button onclick="switchTab('leaderboard')" id="nav-leaderboard" class="nav-btn text-slate-400 flex flex-col items-center justify-center gap-1">
+        <i class="fa-solid fa-trophy text-base"></i>
+        <span class="text-[9px] font-bold">Đua top</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- STUDENT LOGIN MODAL -->
+  <div id="loginModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 w-full max-w-sm shadow-2xl space-y-4">
+      <div class="text-center space-y-1">
+        <div class="w-12 h-12 bg-amber-500 text-slate-950 text-2xl font-black rounded-2xl flex items-center justify-center mx-auto mb-2 shadow-lg shadow-amber-500/20">🎮</div>
+        <h3 class="text-lg font-extrabold text-white">Đăng Nhập Học Sinh</h3>
+        <p class="text-xs text-slate-400">Nhập tên để lưu kết quả học tập & thi đua</p>
+      </div>
+
+      <div class="space-y-3">
+        <div>
+          <label class="text-xs font-bold text-slate-300 block mb-1">Họ và Tên học sinh:</label>
+          <input type="text" id="inputStudentName" placeholder="Ví dụ: Nguyễn Văn An" class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-sm text-white focus:outline-none focus:border-amber-500">
+        </div>
+        <div>
+          <label class="text-xs font-bold text-slate-300 block mb-1">Lớp:</label>
+          <input type="text" id="inputStudentClass" placeholder="Ví dụ: Lớp 5A1" class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-sm text-white focus:outline-none focus:border-amber-500">
+        </div>
+      </div>
+
+      <button onclick="saveStudentInfo()" class="w-full py-3.5 bg-amber-500 text-slate-950 font-black rounded-xl text-sm shadow-lg shadow-amber-500/20 hover:bg-amber-400 active:scale-95 transition">
+        Bắt Đầu Học Bài
+      </button>
+    </div>
+  </div>
+
+  <!-- TEACHER ADMIN MODAL -->
+  <div id="teacherModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-amber-500/40 rounded-3xl p-6 w-full max-w-sm shadow-2xl space-y-4 relative">
+      <button onclick="closeTeacherAdmin()" class="absolute top-4 right-4 text-slate-400 hover:text-white">✕</button>
+      
+      <div class="text-center space-y-1">
+        <div class="w-12 h-12 bg-amber-500 text-slate-950 text-2xl font-black rounded-2xl flex items-center justify-center mx-auto mb-2">🎓</div>
+        <h3 class="text-lg font-extrabold text-amber-400">Góc Quản Lý Giáo Viên</h3>
+        <p class="text-xs text-slate-400">Xem danh sách học sinh & kết quả trực tiếp</p>
+      </div>
+
+      <div id="teacherPinContainer" class="space-y-3">
+        <input type="password" id="teacherPinInput" placeholder="Nhập mã PIN Giáo Viên (Mặc định: 1234)" class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-sm text-white text-center focus:outline-none focus:border-amber-500">
+        <button onclick="verifyTeacherPin()" class="w-full py-3 bg-amber-500 text-slate-950 font-bold rounded-xl text-sm hover:bg-amber-400">Xác Nhận PIN</button>
+      </div>
+
+      <div id="teacherContent" class="hidden space-y-3">
+        <div class="bg-slate-800 p-3 rounded-xl border border-slate-700 text-xs space-y-1">
+          <div class="flex justify-between">
+            <span class="text-slate-400">Tổng học sinh đã lưu:</span>
+            <span id="teacherTotalStudents" class="font-bold text-amber-400">0 em</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-400">Máy chủ Google Sheet:</span>
+            <span id="teacherSheetStatus" class="font-bold text-emerald-400">Đã kết nối ✅</span>
+          </div>
+        </div>
+
+        <a id="btnOpenGoogleSheet" href="#" target="_blank" class="w-full py-3 bg-emerald-500 text-slate-950 font-black rounded-xl text-sm flex items-center justify-center gap-2 hover:bg-emerald-400">
+          <i class="fa-solid fa-file-excel"></i> Mở Bảng Google Sheet Chi Tiết
+        </a>
+
+        <button onclick="clearAllDataPrompt()" class="w-full py-2.5 bg-rose-500/20 text-rose-400 border border-rose-500/30 font-bold rounded-xl text-xs hover:bg-rose-500/30">
+          Xóa Bộ Nhớ Đệm Trên Máy Này
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT APP CODE -->
+  <script>
+    // 🔗 LINK GOOGLE SHEETS MÁY CHỦ (Dán link Web App URL Google Sheets của bạn vào đây)
+    const GOOGLE_SHEET_URL = "DÁN_LINK_WEB_APP_URL_CỦA_BẠN_VÀO_ĐÂY";
+
+    // COMPREHENSIVE VOCABULARY DATASET (100+ Vocabulary Items)
+    const vocabData = [
+      // --- CHỦ ĐỀ 2: CƠ THỂ & KHUÔN MẶT (THE BODY AND FACE) ---
+      { id: 1, vi: "khuôn mặt", en: "face", ipa: "/feɪs/", cat: "Cơ thể & Mặt" },
+      { id: 2, vi: "cơ thể", en: "body", ipa: "/ˈbɒd.i/", cat: "Cơ thể & Mặt" },
+      { id: 3, vi: "đầu", en: "head", ipa: "/hed/", cat: "Cơ thể & Mặt" },
+      { id: 4, vi: "tóc", en: "hair", ipa: "/heər/", cat: "Cơ thể & Mặt" },
+      { id: 5, vi: "mắt", en: "eye", ipa: "/aɪ/", cat: "Cơ thể & Mặt" },
+      { id: 6, vi: "mũi", en: "nose", ipa: "/nəʊz/", cat: "Cơ thể & Mặt" },
+      { id: 7, vi: "tai", en: "ear", ipa: "/ɪər/", cat: "Cơ thể & Mặt" },
+      { id: 8, vi: "miệng", en: "mouth", ipa: "/maʊθ/", cat: "Cơ thể & Mặt" },
+      { id: 9, vi: "nụ cười, cười", en: "smile", ipa: "/smaɪl/", cat: "Cơ thể & Mặt" },
+      { id: 10, vi: "cánh tay", en: "arm", ipa: "/ɑːm/", cat: "Cơ thể & Mặt" },
+      { id: 11, vi: "bàn tay", en: "hand", ipa: "/hænd/", cat: "Cơ thể & Mặt" },
+      { id: 12, vi: "ngón tay", en: "finger", ipa: "/ˈfɪŋ.ɡər/", cat: "Cơ thể & Mặt" },
+      { id: 13, vi: "chân", en: "leg", ipa: "/leɡ/", cat: "Cơ thể & Mặt" },
+      { id: 14, vi: "răng", en: "tooth", ipa: "/tuːθ/", cat: "Cơ thể & Mặt" },
+      { id: 15, vi: "bàn chân", en: "foot", ipa: "/fʊt/", cat: "Cơ thể & Mặt" },
+      { id: 16, vi: "đuôi", en: "tail", ipa: "/teɪl/", cat: "Cơ thể & Mặt" },
+      { id: 17, vi: "cánh", en: "wing", ipa: "/wɪŋ/", cat: "Cơ thể & Mặt" },
+      { id: 18, vi: "lưng", en: "back", ipa: "/bæk/", cat: "Cơ thể & Mặt" },
+      { id: 19, vi: "râu", en: "beard", ipa: "/bɪəd/", cat: "Cơ thể & Mặt" },
+      { id: 20, vi: "ria mép", en: "moustache", ipa: "/məˈstɑːʃ/", cat: "Cơ thể & Mặt" },
+      { id: 21, vi: "cổ", en: "neck", ipa: "/nek/", cat: "Cơ thể & Mặt" },
+      { id: 22, vi: "vai", en: "shoulder", ipa: "/ˈʃəʊl.dər/", cat: "Cơ thể & Mặt" },
+      { id: 23, vi: "dạ dày, bụng", en: "stomach", ipa: "/ˈstʌm.ək/", cat: "Cơ thể & Mặt" },
+      { id: 24, vi: "ngón chân", en: "toe", ipa: "/təʊ/", cat: "Cơ thể & Mặt" },
+      { id: 25, vi: "tóc vàng", en: "blond", ipa: "/blɒnd/", cat: "Cơ thể & Mặt" },
+      { id: 26, vi: "(tóc) xoăn", en: "curly", ipa: "/ˈkɜː.li/", cat: "Cơ thể & Mặt" },
+      { id: 27, vi: "tóc vàng hoe", en: "fair", ipa: "/feər/", cat: "Cơ thể & Mặt" },
+      { id: 28, vi: "(tóc) thẳng", en: "straight", ipa: "/streɪt/", cat: "Cơ thể & Mặt" },
+      { id: 29, vi: "mập, béo", en: "fat", ipa: "/fæt/", cat: "Cơ thể & Mặt" },
+      { id: 30, vi: "ốm, gầy", en: "thin", ipa: "/θɪn/", cat: "Cơ thể & Mặt" },
+      { id: 31, vi: "khuỷu tay", en: "elbow", ipa: "/ˈel.bəʊ/", cat: "Cơ thể & Mặt" },
+      { id: 32, vi: "đầu gối", en: "knee", ipa: "/niː/", cat: "Cơ thể & Mặt" },
+
+      // --- CHỦ ĐỀ 3: QUẦN ÁO (CLOTHES) ---
+      { id: 33, vi: "quần áo", en: "clothes", ipa: "/kləʊðz/", cat: "Quần áo" },
+      { id: 34, vi: "áo sơ mi", en: "shirt", ipa: "/ʃɜːt/", cat: "Quần áo" },
+      { id: 35, vi: "áo thun", en: "T-shirt", ipa: "/ˈtiː.ʃɜːt/", cat: "Quần áo" },
+      { id: 36, vi: "đầm, váy dài", en: "dress", ipa: "/dres/", cat: "Quần áo" },
+      { id: 37, vi: "chân váy", en: "skirt", ipa: "/skɜːt/", cat: "Quần áo" },
+      { id: 38, vi: "áo khoác ngắn", en: "jacket", ipa: "/ˈdʒæk.ɪt/", cat: "Quần áo" },
+      { id: 39, vi: "quần jean", en: "jeans", ipa: "/dʒiːnz/", cat: "Quần áo" },
+      { id: 40, vi: "quần dài", en: "trousers", ipa: "/ˈtraʊ.zəz/", cat: "Quần áo" },
+      { id: 41, vi: "quần sọoc", en: "shorts", ipa: "/ʃɔːts/", cat: "Quần áo" },
+      { id: 42, vi: "đôi giày", en: "shoes", ipa: "/ʃuːz/", cat: "Quần áo" },
+      { id: 43, vi: "giày ống cao", en: "boots", ipa: "/buːts/", cat: "Quần áo" },
+      { id: 44, vi: "vớ, tất", en: "socks", ipa: "/sɒks/", cat: "Quần áo" },
+      { id: 45, vi: "cặp, túi", en: "bag", ipa: "/bæɡ/", cat: "Quần áo" },
+      { id: 46, vi: "túi xách", en: "handbag", ipa: "/ˈhænd.bæɡ/", cat: "Quần áo" },
+      { id: 47, vi: "nón, mũ", en: "hat", ipa: "/hæt/", cat: "Quần áo" },
+      { id: 48, vi: "mắt kính", en: "glasses", ipa: "/ˈɡlɑː.sɪz/", cat: "Quần áo" },
+      { id: 49, vi: "đồng hồ đeo tay", en: "watch", ipa: "/wɒtʃ/", cat: "Quần áo" },
+      { id: 50, vi: "áo khoác dài", en: "coat", ipa: "/kəʊt/", cat: "Quần áo" },
+      { id: 51, vi: "khăn quàng cổ", en: "scarf", ipa: "/skɑːf/", cat: "Quần áo" },
+      { id: 52, vi: "áo len dài tay", en: "sweater", ipa: "/ˈswet.ər/", cat: "Quần áo" },
+      { id: 53, vi: "mũ bảo hiểm", en: "helmet", ipa: "/ˈhel.mət/", cat: "Quần áo" },
+      { id: 54, vi: "đồ bơi", en: "swimsuit", ipa: "/ˈswɪm.suːt/", cat: "Quần áo" },
+      { id: 55, vi: "đồng phục", en: "uniform", ipa: "/ˈjuː.nɪ.fɔːm/", cat: "Quần áo" },
+      { id: 56, vi: "trang phục", en: "costume", ipa: "/ˈkɒs.tʃuːm/", cat: "Quần áo" },
+      { id: 57, vi: "thắt lưng, dây nịt", en: "belt", ipa: "/belt/", cat: "Quần áo" },
+      { id: 58, vi: "găng tay", en: "glove", ipa: "/ɡlʌv/", cat: "Quần áo" },
+      { id: 59, vi: "dây chuyền", en: "necklace", ipa: "/ˈnek.ləs/", cat: "Quần áo" },
+      { id: 60, vi: "vòng đeo tay", en: "bracelet", ipa: "/ˈbreɪ.slət/", cat: "Quần áo" },
+      { id: 61, vi: "nhẫn", en: "ring", ipa: "/rɪŋ/", cat: "Quần áo" },
+      { id: 62, vi: "kính mát", en: "sunglasses", ipa: "/ˈsʌnˌɡlɑː.sɪz/", cat: "Quần áo" },
+      { id: 63, vi: "quần áo bó", en: "tights", ipa: "/taɪts/", cat: "Quần áo" },
+      { id: 64, vi: "túi quần, túi áo", en: "pocket", ipa: "/ˈpɒk.ɪt/", cat: "Quần áo" },
+      { id: 65, vi: "đồ ngủ", en: "pajamas", ipa: "/pəˈdʒɑː.məz/", cat: "Quần áo" },
+      { id: 66, vi: "chấm bi (họa tiết)", en: "spot", ipa: "/spɒt/", cat: "Quần áo" },
+      { id: 67, vi: "có chấm bi", en: "spotted", ipa: "/ˈspɒt.ɪd/", cat: "Quần áo" },
+      { id: 68, vi: "sọc (họa tiết)", en: "stripe", ipa: "/straɪp/", cat: "Quần áo" },
+      { id: 69, vi: "có sọc", en: "striped", ipa: "/straɪpt/", cat: "Quần áo" },
+      { id: 70, vi: "cây dù", en: "umbrella", ipa: "/ʌmˈbrel.ə/", cat: "Quần áo" },
+      { id: 71, vi: "vương miện", en: "crown", ipa: "/kraʊn/", cat: "Quần áo" },
+
+      // --- CHỦ ĐỀ 4: MÀU SẮC (COLOURS / COLORS) ---
+      { id: 72, vi: "xanh dương", en: "blue", ipa: "/bluː/", cat: "Màu sắc" },
+      { id: 73, vi: "xanh lá", en: "green", ipa: "/ɡriːn/", cat: "Màu sắc" },
+      { id: 74, vi: "đỏ", en: "red", ipa: "/red/", cat: "Màu sắc" },
+      { id: 75, vi: "hồng", en: "pink", ipa: "/pɪŋk/", cat: "Màu sắc" },
+      { id: 76, vi: "tím", en: "purple", ipa: "/ˈpɜː.pəl/", cat: "Màu sắc" },
+      { id: 77, vi: "vàng", en: "yellow", ipa: "/ˈjel.əʊ/", cat: "Màu sắc" },
+      { id: 78, vi: "cam", en: "orange", ipa: "/ˈɒr.ɪndʒ/", cat: "Màu sắc" },
+      { id: 79, vi: "đen", en: "black", ipa: "/blæk/", cat: "Màu sắc" },
+      { id: 80, vi: "trắng", en: "white", ipa: "/waɪt/", cat: "Màu sắc" },
+      { id: 81, vi: "nâu", en: "brown", ipa: "/braʊn/", cat: "Màu sắc" },
+      { id: 82, vi: "xám", en: "grey", ipa: "/ɡreɪ/", cat: "Màu sắc" },
+      { id: 83, vi: "màu sáng, tươi", en: "bright", ipa: "/braɪt/", cat: "Màu sắc" },
+      { id: 84, vi: "màu vàng kim", en: "gold", ipa: "/ɡəʊld/", cat: "Màu sắc" },
+      { id: 85, vi: "màu bạc", en: "silver", ipa: "/ˈsɪl.vər/", cat: "Màu sắc" },
+
+      // --- CHỦ ĐỀ 5: GIA ĐÌNH & BẠN BÈ (FAMILY & FRIENDS) ---
+      { id: 86, vi: "gia đình", en: "family", ipa: "/ˈfæm.əl.i/", cat: "Gia đình & Bạn bè" },
+      { id: 87, vi: "bố, ba", en: "father", ipa: "/ˈfɑː.ðər/", cat: "Gia đình & Bạn bè" },
+      { id: 88, vi: "mẹ", en: "mother", ipa: "/ˈmʌð.ər/", cat: "Gia đình & Bạn bè" },
+      { id: 89, vi: "anh/em trai", en: "brother", ipa: "/ˈbrʌð.ər/", cat: "Gia đình & Bạn bè" },
+      { id: 90, vi: "chị/em gái", en: "sister", ipa: "/ˈsɪs.tər/", cat: "Gia đình & Bạn bè" },
+      { id: 91, vi: "ông", en: "grandfather", ipa: "/ˈɡræn.fɑː.ðər/", cat: "Gia đình & Bạn bè" },
+      { id: 92, vi: "bà", en: "grandmother", ipa: "/ˈɡræn.mʌð.ər/", cat: "Gia đình & Bạn bè" },
+      { id: 93, vi: "anh/chị/em họ", en: "cousin", ipa: "/ˈkʌz.ən/", cat: "Gia đình & Bạn bè" },
+      { id: 94, vi: "em bé", en: "baby", ipa: "/ˈbeɪ.bi/", cat: "Gia đình & Bạn bè" },
+      { id: 95, vi: "người bạn", en: "friend", ipa: "/frend/", cat: "Gia đình & Bạn bè" },
+      { id: 96, vi: "bạn cùng lớp", en: "classmate", ipa: "/ˈklɑːs.meɪt/", cat: "Gia đình & Bạn bè" },
+      { id: 97, vi: "cậu bé", en: "boy", ipa: "/bɔɪ/", cat: "Gia đình & Bạn bè" },
+      { id: 98, vi: "cô bé", en: "girl", ipa: "/ɡɜːl/", cat: "Gia đình & Bạn bè" },
+      { id: 99, vi: "đứa trẻ", en: "child", ipa: "/tʃaɪld/", cat: "Gia đình & Bạn bè" },
+      { id: 100, vi: "đứa trẻ", en: "kid", ipa: "/kɪd/", cat: "Gia đình & Bạn bè" },
+      { id: 101, vi: "đàn ông", en: "man", ipa: "/mæn/", cat: "Gia đình & Bạn bè" },
+      { id: 102, vi: "phụ nữ", en: "woman", ipa: "/ˈwʊm.ən/", cat: "Gia đình & Bạn bè" },
+      { id: 103, vi: "con người", en: "person", ipa: "/ˈpɜː.sən/", cat: "Gia đình & Bạn bè" },
+      { id: 104, vi: "sống", en: "live", ipa: "/lɪv/", cat: "Gia đình & Bạn bè" },
+      { id: 105, vi: "vợ", en: "wife", ipa: "/waɪf/", cat: "Gia đình & Bạn bè" },
+      { id: 106, vi: "chồng", en: "husband", ipa: "/ˈhʌz.bənd/", cat: "Gia đình & Bạn bè" },
+      { id: 107, vi: "ba / mẹ", en: "parent", ipa: "/ˈpeə.rənt/", cat: "Gia đình & Bạn bè" },
+      { id: 108, vi: "con gái", en: "daughter", ipa: "/ˈdɔː.tər/", cat: "Gia đình & Bạn bè" },
+      { id: 109, vi: "con trai", en: "son", ipa: "/sʌn/", cat: "Gia đình & Bạn bè" },
+      { id: 110, vi: "bạn thân", en: "best friend", ipa: "/best frend/", cat: "Gia đình & Bạn bè" },
+      { id: 111, vi: "ông bà", en: "grandparents", ipa: "/ˈɡræn.peə.rənts/", cat: "Gia đình & Bạn bè" },
+      { id: 112, vi: "cô, dì, thím", en: "aunt", ipa: "/ɑːnt/", cat: "Gia đình & Bạn bè" },
+      { id: 113, vi: "chú, bác, cậu", en: "uncle", ipa: "/ˈʌŋ.kəl/", cat: "Gia đình & Bạn bè" },
+      { id: 114, vi: "cháu", en: "grandchild", ipa: "/ˈɡræn.tʃaɪld/", cat: "Gia đình & Bạn bè" },
+      { id: 115, vi: "cháu gái", en: "granddaughter", ipa: "/ˈɡræn.dɔː.tər/", cat: "Gia đình & Bạn bè" },
+      { id: 116, vi: "cháu trai", en: "grandson", ipa: "/ˈɡræn.sʌn/", cat: "Gia đình & Bạn bè" },
+      { id: 117, vi: "người lớn", en: "grown-up", ipa: "/ˈɡrəʊn.ʌp/", cat: "Gia đình & Bạn bè" },
+      { id: 118, vi: "kết hôn", en: "get married", ipa: "/ɡet ˈmær.id/", cat: "Gia đình & Bạn bè" },
+      { id: 119, vi: "đối tác, cộng sự", en: "partner", ipa: "/ˈpɑːt.nər/", cat: "Gia đình & Bạn bè" },
+      { id: 120, vi: "họ (họ và tên)", en: "surname", ipa: "/ˈsɜː.neɪm/", cat: "Gia đình & Bạn bè" }
+    ];
+
+    let currentStudent = null;
+    let masteredSet = new Set();
+    let currentCardIndex = 0;
+    let selectedCategory = "all";
+    let filteredVocabList = [...vocabData];
+    let isFlipped = false;
+    let currentDictCatFilter = "all";
+
+    let quizActive = false, quizScore = 0, quizStreak = 0, quizTimer = null, quizTimeLeft = 12, currentQuizWord = null;
+    let typingActive = false, typingScore = 0, typingStreak = 0, typingTimer = null, typingTimeLeft = 20, currentTypingWord = null;
+
+    let englishVoice = null;
+    const KEY_STUDENT = "vocab_student_info_v4";
+    const KEY_SCORES = "vocab_high_scores_v4";
+
+    window.addEventListener("DOMContentLoaded", () => {
+      const ua = navigator.userAgent || navigator.vendor || window.opera;
+      if (ua.includes("Zalo") || ua.includes("FBAN") || ua.includes("FBAV")) {
+        document.getElementById("zaloNotice").classList.remove("hidden");
+      }
+
+      initEnglishVoice();
+      loadStudentInfo();
+      applyCategoryFilter();
+      renderDictList();
+      renderLeaderboard();
+
+      document.getElementById("typingInput").addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          checkTypingAnswer();
+        }
+      });
+    });
+
+    function initEnglishVoice() {
+      if (!('speechSynthesis' in window)) return;
+      const loadVoice = () => {
+        const voices = window.speechSynthesis.getVoices();
+        englishVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Google') || v.name.includes('Samantha') || v.name.includes('Natural') || v.name.includes('US'))) 
+                    || voices.find(v => v.lang.startsWith('en')) 
+                    || null;
+      };
+      loadVoice();
+      if (window.speechSynthesis.onvoiceschanged !== undefined) {
+        window.speechSynthesis.onvoiceschanged = loadVoice;
+      }
+    }
+
+    function selectMainCategory(cat) {
+      selectedCategory = cat;
+      document.querySelectorAll(".cat-filter-btn").forEach(btn => {
+        btn.className = "cat-filter-btn bg-slate-900 text-slate-300 border border-slate-800 px-3 py-1.5 rounded-xl whitespace-nowrap";
+      });
+      
+      const activeIdMap = {
+        'all': 'catbtn-all',
+        'Cơ thể & Mặt': 'catbtn-body',
+        'Quần áo': 'catbtn-clothes',
+        'Màu sắc': 'catbtn-colours',
+        'Gia đình & Bạn bè': 'catbtn-family'
+      };
+      const activeBtn = document.getElementById(activeIdMap[cat]);
+      if (activeBtn) activeBtn.className = "cat-filter-btn active bg-amber-500 text-slate-950 px-3 py-1.5 rounded-xl whitespace-nowrap shadow-sm";
+
+      applyCategoryFilter();
+    }
+
+    function applyCategoryFilter() {
+      let baseList = (selectedCategory === "all") ? vocabData : vocabData.filter(w => w.cat === selectedCategory);
+      
+      const onlyUnmastered = document.getElementById("onlyUnmasteredToggle").checked;
+      if (onlyUnmastered) {
+        filteredVocabList = baseList.filter(w => !masteredSet.has(w.id));
+        if (filteredVocabList.length === 0) {
+          alert("Tuyệt vời! Bạn đã thuộc tất cả các từ trong mục này rồi 🎉");
+          document.getElementById("onlyUnmasteredToggle").checked = false;
+          filteredVocabList = baseList;
+        }
+      } else {
+        filteredVocabList = baseList;
+      }
+
+      currentCardIndex = 0;
+      renderFlashcard();
+    }
+
+    function loadStudentInfo() {
+      const saved = localStorage.getItem(KEY_STUDENT);
+      if (saved) {
+        currentStudent = JSON.parse(saved);
+        document.getElementById("displayStudentName").textContent = currentStudent.name;
+        document.getElementById("displayStudentClass").textContent = currentStudent.sClass;
+        document.getElementById("loginModal").classList.add("hidden");
+        loadMasteryData();
+      } else {
+        openLoginModal();
+      }
+    }
+
+    function openLoginModal() {
+      if (currentStudent) {
+        document.getElementById("inputStudentName").value = currentStudent.name;
+        document.getElementById("inputStudentClass").value = currentStudent.sClass;
+      }
+      document.getElementById("loginModal").classList.remove("hidden");
+    }
+
+    function saveStudentInfo() {
+      const name = document.getElementById("inputStudentName").value.trim();
+      const sClass = document.getElementById("inputStudentClass").value.trim();
+      if (!name) return alert("Vui lòng nhập tên học sinh!");
+      
+      currentStudent = { name: name, sClass: sClass || "Chưa chọn lớp" };
+      localStorage.setItem(KEY_STUDENT, JSON.stringify(currentStudent));
+      
+      document.getElementById("displayStudentName").textContent = currentStudent.name;
+      document.getElementById("displayStudentClass").textContent = currentStudent.sClass;
+      document.getElementById("loginModal").classList.add("hidden");
+      
+      loadMasteryData();
+      updateMasteryProgress();
+      sendToGoogleSheet("Đăng nhập", 0, "Hệ thống");
+    }
+
+    function sendToGoogleSheet(action, score, mode) {
+      if (!currentStudent || !GOOGLE_SHEET_URL.startsWith("http")) return;
+
+      const payload = {
+        name: currentStudent.name,
+        sClass: currentStudent.sClass,
+        action: action,
+        score: score || 0,
+        masteredCount: masteredSet.size,
+        mode: mode || "Chung"
+      };
+
+      fetch(GOOGLE_SHEET_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      }).catch(e => console.log("Lỗi đồng bộ Sheet:", e));
+    }
+
+    function getMasteryKey() {
+      if (!currentStudent) return "vocab_mastered_default";
+      return `vocab_mastered_${currentStudent.name}_${currentStudent.sClass}`;
+    }
+
+    function loadMasteryData() {
+      const saved = localStorage.getItem(getMasteryKey());
+      masteredSet = saved ? new Set(JSON.parse(saved)) : new Set();
+      updateMasteryProgress();
+    }
+
+    function saveMasteryData() {
+      localStorage.setItem(getMasteryKey(), JSON.stringify(Array.from(masteredSet)));
+      updateMasteryProgress();
+    }
+
+    function updateMasteryProgress() {
+      const count = masteredSet.size;
+      const total = vocabData.length;
+      const percent = Math.round((count / total) * 100);
+
+      document.getElementById("headerMasteredCount").textContent = `${count}/${total}`;
+      document.getElementById("masteryPercentText").textContent = `${percent}%`;
+      document.getElementById("masteryProgressBar").style.width = `${percent}%`;
+
+      const currentWord = filteredVocabList[currentCardIndex];
+      if (currentWord) {
+        const isMastered = masteredSet.has(currentWord.id);
+        const badge = document.getElementById("fcStatusBadge");
+        if (isMastered) {
+          badge.textContent = "Đã thuộc bài ✅";
+          badge.className = "text-xs font-bold px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
+        } else {
+          badge.textContent = "Chưa thuộc bài ❌";
+          badge.className = "text-xs font-bold px-3 py-1 rounded-full bg-rose-500/20 text-rose-400 border border-rose-500/30";
+        }
+      }
+    }
+
+    function setMasteryStatus(status) {
+      const currentWord = filteredVocabList[currentCardIndex];
+      if (!currentWord) return;
+      if (status) masteredSet.add(currentWord.id);
+      else masteredSet.delete(currentWord.id);
+      saveMasteryData();
+
+      sendToGoogleSheet("Cập nhật thuộc bài", 0, `Thẻ: ${currentWord.en}`);
+      nextCard();
+    }
+
+    function toggleFilterUnmastered() {
+      applyCategoryFilter();
+    }
+
+    function renderFlashcard() {
+      if (filteredVocabList.length === 0) return;
+      const item = filteredVocabList[currentCardIndex];
+      
+      document.getElementById("fcCategory").textContent = item.cat;
+      document.getElementById("fcNumber").textContent = `${currentCardIndex + 1}/${filteredVocabList.length}`;
+      document.getElementById("fcVietnamese").textContent = item.vi;
+      document.getElementById("fcEnglish").textContent = item.en;
+      document.getElementById("fcPhonetic").textContent = item.ipa;
+
+      isFlipped = false;
+      document.getElementById("flashcard").classList.remove("rotate-y-180");
+      updateMasteryProgress();
+    }
+
+    function flipCard() {
+      isFlipped = !isFlipped;
+      document.getElementById("flashcard").classList.toggle("rotate-y-180", isFlipped);
+      if (isFlipped) speakCurrentWord();
+    }
+
+    function nextCard() {
+      if (filteredVocabList.length === 0) return;
+      currentCardIndex = (currentCardIndex + 1) % filteredVocabList.length;
+      renderFlashcard();
+    }
+
+    function prevCard() {
+      if (filteredVocabList.length === 0) return;
+      currentCardIndex = (currentCardIndex - 1 + filteredVocabList.length) % filteredVocabList.length;
+      renderFlashcard();
+    }
+
+    function speakText(text) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "en-US";
+      utterance.rate = 0.85;
+      if (englishVoice) utterance.voice = englishVoice;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function speakCurrentWord() {
+      const item = filteredVocabList[currentCardIndex];
+      if (item) speakText(item.en);
+    }
+
+    // MULTIPLE CHOICE QUIZ
+    function startQuizRound() {
+      quizActive = true;
+      quizScore = 0;
+      quizStreak = 0;
+      document.getElementById("quizScore").textContent = "0";
+      document.getElementById("quizStreak").textContent = "🔥 0";
+      nextQuizQuestion();
+    }
+
+    function nextQuizQuestion() {
+      clearInterval(quizTimer);
+      quizTimeLeft = 12;
+      document.getElementById("quizTimer").textContent = `${quizTimeLeft}s`;
+
+      const currentPool = (selectedCategory === "all") ? vocabData : vocabData.filter(w => w.cat === selectedCategory);
+      currentQuizWord = currentPool[Math.floor(Math.random() * currentPool.length)];
+      document.getElementById("quizQuestion").textContent = currentQuizWord.vi;
+      document.getElementById("quizCategory").textContent = currentQuizWord.cat;
+
+      let options = [currentQuizWord.en];
+      while (options.length < 4) {
+        let randomWord = vocabData[Math.floor(Math.random() * vocabData.length)].en;
+        if (!options.includes(randomWord)) options.push(randomWord);
+      }
+      options.sort(() => Math.random() - 0.5);
+
+      const optionsContainer = document.getElementById("quizOptions");
+      optionsContainer.innerHTML = "";
+      options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.className = "w-full py-3.5 px-4 bg-slate-900 border border-slate-800 rounded-xl text-amber-400 font-extrabold text-sm hover:bg-slate-800 active:scale-95 transition flex items-center justify-between";
+        btn.innerHTML = `<span>${opt}</span> <i class="fa-solid fa-chevron-right text-xs text-slate-600"></i>`;
+        btn.onclick = () => handleQuizAnswer(opt);
+        optionsContainer.appendChild(btn);
+      });
+
+      quizTimer = setInterval(() => {
+        quizTimeLeft--;
+        document.getElementById("quizTimer").textContent = `${quizTimeLeft}s`;
+        if (quizTimeLeft <= 0) {
+          clearInterval(quizTimer);
+          quizStreak = 0;
+          document.getElementById("quizStreak").textContent = "🔥 0";
+          nextQuizQuestion();
+        }
+      }, 1000);
+    }
+
+    function handleQuizAnswer(selected) {
+      clearInterval(quizTimer);
+      if (selected === currentQuizWord.en) {
+        quizStreak++;
+        const points = 100 + (quizStreak * 20);
+        quizScore += points;
+        document.getElementById("quizScore").textContent = quizScore;
+        document.getElementById("quizStreak").textContent = `🔥 ${quizStreak}`;
+        
+        saveHighScore(quizScore);
+        masteredSet.add(currentQuizWord.id);
+        saveMasteryData();
+        confetti({ particleCount: 30, spread: 60, origin: { y: 0.8 } });
+
+        sendToGoogleSheet("Trả lời Trắc nghiệm Đúng", quizScore, "Trắc nghiệm");
+      } else {
+        quizStreak = 0;
+        document.getElementById("quizStreak").textContent = "🔥 0";
+      }
+      nextQuizQuestion();
+    }
+
+    // TYPING CHALLENGE
+    function startTypingRound() {
+      typingActive = true;
+      typingScore = 0;
+      typingStreak = 0;
+      document.getElementById("typingScore").textContent = "0";
+      document.getElementById("typingStreak").textContent = "🔥 0";
+      nextTypingQuestion();
+    }
+
+    function nextTypingQuestion() {
+      clearInterval(typingTimer);
+      typingTimeLeft = 20;
+      document.getElementById("typingTimer").textContent = `${typingTimeLeft}s`;
+      document.getElementById("typingFeedback").textContent = "";
+      
+      const input = document.getElementById("typingInput");
+      input.value = "";
+      input.focus();
+
+      const currentPool = (selectedCategory === "all") ? vocabData : vocabData.filter(w => w.cat === selectedCategory);
+      currentTypingWord = currentPool[Math.floor(Math.random() * currentPool.length)];
+      document.getElementById("typingQuestion").textContent = currentTypingWord.vi;
+      document.getElementById("typingCategory").textContent = currentTypingWord.cat;
+      document.getElementById("typingPhoneticHint").textContent = currentTypingWord.ipa;
+
+      typingTimer = setInterval(() => {
+        typingTimeLeft--;
+        document.getElementById("typingTimer").textContent = `${typingTimeLeft}s`;
+        if (typingTimeLeft <= 0) {
+          clearInterval(typingTimer);
+          typingStreak = 0;
+          document.getElementById("typingStreak").textContent = "🔥 0";
+          document.getElementById("typingFeedback").textContent = `⏰ Hết giờ! Đáp án đúng: ${currentTypingWord.en}`;
+          document.getElementById("typingFeedback").className = "text-xs font-bold text-rose-400 min-h-[20px]";
+          setTimeout(nextTypingQuestion, 2000);
+        }
+      }, 1000);
+    }
+
+    function speakTypingHint() {
+      if (currentTypingWord) speakText(currentTypingWord.en);
+    }
+
+    function checkTypingAnswer() {
+      if (!typingActive || !currentTypingWord) return;
+      clearInterval(typingTimer);
+
+      const userAns = document.getElementById("typingInput").value.trim().toLowerCase();
+      const targetAns = currentTypingWord.en.trim().toLowerCase();
+
+      const feedback = document.getElementById("typingFeedback");
+      const card = document.getElementById("typingCardContainer");
+
+      if (userAns === targetAns) {
+        typingStreak++;
+        const points = 150 + (typingStreak * 30);
+        typingScore += points;
+        document.getElementById("typingScore").textContent = typingScore;
+        document.getElementById("typingStreak").textContent = `🔥 ${typingStreak}`;
+
+        feedback.textContent = `🎉 Chính xác! (+${points} điểm)`;
+        feedback.className = "text-xs font-bold text-emerald-400 min-h-[20px]";
+        
+        speakText(currentTypingWord.en);
+        saveHighScore(typingScore);
+        masteredSet.add(currentTypingWord.id);
+        saveMasteryData();
+
+        confetti({ particleCount: 35, spread: 70, origin: { y: 0.8 } });
+        sendToGoogleSheet("Gõ từ Đúng", typingScore, "Viết từ");
+        setTimeout(nextTypingQuestion, 1500);
+      } else {
+        typingStreak = 0;
+        document.getElementById("typingStreak").textContent = "🔥 0";
+        feedback.textContent = `❌ Sai rồi! Đáp án đúng là: "${currentTypingWord.en}"`;
+        feedback.className = "text-xs font-bold text-rose-400 min-h-[20px]";
+
+        card.classList.add("shake");
+        setTimeout(() => card.classList.remove("shake"), 400);
+        setTimeout(nextTypingQuestion, 2500);
+      }
+    }
+
+    function skipTypingQuestion() {
+      clearInterval(typingTimer);
+      typingStreak = 0;
+      document.getElementById("typingStreak").textContent = "🔥 0";
+      document.getElementById("typingFeedback").textContent = `Đã bỏ qua! Đáp án: ${currentTypingWord.en}`;
+      document.getElementById("typingFeedback").className = "text-xs font-bold text-amber-400 min-h-[20px]";
+      setTimeout(nextTypingQuestion, 1500);
+    }
+
+    function saveHighScore(score) {
+      if (!currentStudent) return;
+      let scores = JSON.parse(localStorage.getItem(KEY_SCORES) || "[]");
+      const existing = scores.find(s => s.name === currentStudent.name && s.sClass === currentStudent.sClass);
+      
+      if (existing) {
+        if (score > existing.score) existing.score = score;
+      } else {
+        scores.push({ name: currentStudent.name, sClass: currentStudent.sClass, score: score });
+      }
+      
+      localStorage.setItem(KEY_SCORES, JSON.stringify(scores));
+      renderLeaderboard(scores);
+    }
+
+    function filterDictCategory(cat) {
+      currentDictCatFilter = cat;
+      document.querySelectorAll(".dict-cat-btn").forEach(btn => {
+        btn.className = "dict-cat-btn bg-slate-900 text-slate-300 font-bold px-3 py-1.5 rounded-lg border border-slate-800 whitespace-nowrap";
+      });
+      event.target.className = "dict-cat-btn active bg-amber-500 text-slate-950 font-bold px-3 py-1.5 rounded-lg whitespace-nowrap";
+      renderDictList();
+    }
+
+    function renderDictList() {
+      const search = document.getElementById("dictSearch").value.toLowerCase();
+      const container = document.getElementById("dictListContainer");
+      container.innerHTML = "";
+
+      let pool = (selectedCategory === "all") ? vocabData : vocabData.filter(w => w.cat === selectedCategory);
+
+      pool.forEach(item => {
+        const isMastered = masteredSet.has(item.id);
+        if (currentDictCatFilter === "mastered" && !isMastered) return;
+        if (currentDictCatFilter === "unmastered" && isMastered) return;
+        if (search && !item.vi.toLowerCase().includes(search) && !item.en.toLowerCase().includes(search)) return;
+
+        const card = document.createElement("div");
+        card.className = "bg-slate-900 border border-slate-800/80 rounded-xl p-3 flex items-center justify-between";
+        card.innerHTML = `
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-extrabold text-white text-sm">${item.vi}</span>
+              <span class="text-[10px] text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">${item.en}</span>
+            </div>
+            <div class="text-xs text-slate-500 mt-0.5">${item.ipa} • ${item.cat}</div>
+          </div>
+          <button onclick="toggleDictMastery(${item.id})" class="px-3 py-1.5 rounded-lg font-bold text-xs transition flex items-center gap-1 ${
+            isMastered 
+              ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' 
+              : 'bg-slate-800 text-slate-400 border border-slate-700'
+          }">
+            ${isMastered ? '<i class="fa-solid fa-check"></i> Đã thuộc' : '+ Đánh dấu thuộc'}
+          </button>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function toggleDictMastery(id) {
+      if (masteredSet.has(id)) masteredSet.delete(id);
+      else masteredSet.add(id);
+      saveMasteryData();
+      renderDictList();
+    }
+
+    function renderLeaderboard(scoresData) {
+      const scores = scoresData || JSON.parse(localStorage.getItem(KEY_SCORES) || "[]");
+      scores.sort((a, b) => b.score - a.score);
+
+      const container = document.getElementById("leaderboardList");
+      container.innerHTML = "";
+
+      if (scores.length === 0) {
+        container.innerHTML = `<div class="text-center text-xs text-slate-500 py-4">Chưa có điểm thi đấu. Hãy thử sức ngay!</div>`;
+        return;
+      }
+
+      scores.forEach((s, idx) => {
+        let badge = `<span class="w-6 h-6 rounded-full bg-slate-800 text-slate-400 text-xs font-bold flex items-center justify-center">${idx + 1}</span>`;
+        if (idx === 0) badge = `<span class="w-6 h-6 rounded-full bg-amber-500 text-slate-950 text-xs font-black flex items-center justify-center">🥇</span>`;
+        if (idx === 1) badge = `<span class="w-6 h-6 rounded-full bg-slate-300 text-slate-950 text-xs font-black flex items-center justify-center">🥈</span>`;
+        if (idx === 2) badge = `<span class="w-6 h-6 rounded-full bg-orange-600 text-white text-xs font-black flex items-center justify-center">🥉</span>`;
+
+        const row = document.createElement("div");
+        row.className = "flex items-center justify-between p-2.5 bg-slate-800/50 rounded-xl border border-slate-700/50";
+        row.innerHTML = `
+          <div class="flex items-center gap-3">
+            ${badge}
+            <div>
+              <div class="text-xs font-bold text-white">${s.name}</div>
+              <div class="text-[10px] text-slate-400">${s.sClass}</div>
+            </div>
+          </div>
+          <div class="text-sm font-black text-amber-400">${s.score} pt</div>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    // TEACHER ADMIN FUNCTIONS
+    function openTeacherAdmin() {
+      document.getElementById("teacherModal").classList.remove("hidden");
+    }
+
+    function closeTeacherAdmin() {
+      document.getElementById("teacherModal").classList.add("hidden");
+    }
+
+    function verifyTeacherPin() {
+      const pin = document.getElementById("teacherPinInput").value.trim();
+      if (pin === "1234") {
+        document.getElementById("teacherPinContainer").classList.add("hidden");
+        document.getElementById("teacherContent").classList.remove("hidden");
+        
+        const scores = JSON.parse(localStorage.getItem(KEY_SCORES) || "[]");
+        document.getElementById("teacherTotalStudents").textContent = `${scores.length} học sinh`;
+        
+        const sheetBtn = document.getElementById("btnOpenGoogleSheet");
+        if (GOOGLE_SHEET_URL.startsWith("http")) {
+          sheetBtn.href = GOOGLE_SHEET_URL;
+        } else {
+          sheetBtn.innerText = "Chưa dán Link Google Sheet vào Code";
+          sheetBtn.classList.add("opacity-50", "pointer-events-none");
+        }
+      } else {
+        alert("Mã PIN không chính xác! (Mặc định là: 1234)");
+      }
+    }
+
+    function clearAllDataPrompt() {
+      if (confirm("Bạn có chắc chắn muốn xóa bộ nhớ đệm trên máy này không?")) {
+        localStorage.clear();
+        alert("Đã xóa xong!");
+        location.reload();
+      }
+    }
+
+    function switchTab(tab) {
+      document.querySelectorAll(".tab-content").forEach(el => el.classList.add("hidden"));
+      document.querySelectorAll(".nav-btn").forEach(el => {
+        el.classList.remove("text-amber-400");
+        el.classList.add("text-slate-400");
+      });
+
+      document.getElementById(`tab-${tab}`).classList.remove("hidden");
+      document.getElementById(`nav-${tab}`).classList.remove("text-slate-400");
+      document.getElementById(`nav-${tab}`).classList.add("text-amber-400");
+
+      if (tab === "quiz" && !quizActive) startQuizRound();
+      if (tab === "typing" && !typingActive) startTypingRound();
+    }
+  </script>
+</body>
+</html>
