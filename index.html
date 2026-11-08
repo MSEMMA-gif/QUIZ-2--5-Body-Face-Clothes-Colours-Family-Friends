@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Đua Top Từ Vựng Tiếng Anh - Body, Clothes, Colours & Family</title>
+  <title>Đua Top Từ Vựng Tiếng Anh - Arena</title>
   
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -68,7 +68,7 @@
       <div class="flex items-center space-x-2">
         <div class="bg-slate-800/80 border border-slate-700/50 rounded-lg px-2.5 py-1 text-center">
           <div class="text-[10px] text-slate-400 uppercase font-bold">Đã thuộc</div>
-          <div id="headerMasteredCount" class="text-xs font-black text-emerald-400">0/100</div>
+          <div id="headerMasteredCount" class="text-xs font-black text-emerald-400">0/120</div>
         </div>
         <button onclick="openTeacherAdmin()" class="bg-amber-500/10 border border-amber-500/30 text-amber-400 p-2 rounded-lg hover:bg-amber-500/20 active:scale-95 transition" title="Góc Giáo Viên">
           <i class="fa-solid fa-user-gear text-sm"></i>
@@ -102,6 +102,7 @@
     <!-- CATEGORY FILTER SELECTOR -->
     <div class="flex gap-1.5 overflow-x-auto pb-3 custom-scrollbar text-xs font-bold">
       <button onclick="selectMainCategory('all')" id="catbtn-all" class="cat-filter-btn active bg-amber-500 text-slate-950 px-3 py-1.5 rounded-xl whitespace-nowrap shadow-sm">Tất cả</button>
+      <button onclick="selectMainCategory('Động vật')" id="catbtn-animals" class="cat-filter-btn bg-slate-900 text-slate-300 border border-slate-800 px-3 py-1.5 rounded-xl whitespace-nowrap">🐾 Động vật</button>
       <button onclick="selectMainCategory('Cơ thể & Mặt')" id="catbtn-body" class="cat-filter-btn bg-slate-900 text-slate-300 border border-slate-800 px-3 py-1.5 rounded-xl whitespace-nowrap">💪 Cơ thể & Mặt</button>
       <button onclick="selectMainCategory('Quần áo')" id="catbtn-clothes" class="cat-filter-btn bg-slate-900 text-slate-300 border border-slate-800 px-3 py-1.5 rounded-xl whitespace-nowrap">👕 Quần áo</button>
       <button onclick="selectMainCategory('Màu sắc')" id="catbtn-colours" class="cat-filter-btn bg-slate-900 text-slate-300 border border-slate-800 px-3 py-1.5 rounded-xl whitespace-nowrap">🎨 Màu sắc</button>
@@ -125,7 +126,7 @@
           <div class="absolute inset-0 bg-gradient-to-b from-slate-900 to-slate-800 border-2 border-slate-700/80 rounded-3xl p-6 flex flex-col justify-between items-center backface-hidden">
             <div class="w-full flex justify-between items-center text-xs font-bold text-slate-400">
               <span id="fcCategory" class="bg-slate-800 px-3 py-1 rounded-full border border-slate-700">Chủ đề</span>
-              <span id="fcNumber">1/100</span>
+              <span id="fcNumber">1/120</span>
             </div>
             <div class="text-center my-auto">
               <div class="text-xs font-bold text-amber-400 uppercase tracking-widest mb-1">Tiếng Việt</div>
@@ -334,7 +335,7 @@
     </div>
   </div>
 
-  <!-- TEACHER ADMIN MODAL -->
+  <!-- TEACHER ADMIN MODAL (MÃ PIN MỚI: 9999) -->
   <div id="teacherModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-slate-900 border border-amber-500/40 rounded-3xl p-6 w-full max-w-sm shadow-2xl space-y-4 relative">
       <button onclick="closeTeacherAdmin()" class="absolute top-4 right-4 text-slate-400 hover:text-white">✕</button>
@@ -346,7 +347,7 @@
       </div>
 
       <div id="teacherPinContainer" class="space-y-3">
-        <input type="password" id="teacherPinInput" placeholder="Nhập mã PIN Giáo Viên (Mặc định: 1234)" class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-sm text-white text-center focus:outline-none focus:border-amber-500">
+        <input type="password" id="teacherPinInput" placeholder="Nhập mã PIN Giáo Viên (Mặc định: 9999)" class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-sm text-white text-center focus:outline-none focus:border-amber-500">
         <button onclick="verifyTeacherPin()" class="w-full py-3 bg-amber-500 text-slate-950 font-bold rounded-xl text-sm hover:bg-amber-400">Xác Nhận PIN</button>
       </div>
 
@@ -378,135 +379,137 @@
     // 🔗 LINK GOOGLE SHEETS MÁY CHỦ (Dán link Web App URL Google Sheets của bạn vào đây)
     const GOOGLE_SHEET_URL = "DÁN_LINK_WEB_APP_URL_CỦA_BẠN_VÀO_ĐÂY";
 
-    // COMPREHENSIVE VOCABULARY DATASET (100+ Vocabulary Items)
+    // VOCABULARY DATASET
     const vocabData = [
-      // --- CHỦ ĐỀ 2: CƠ THỂ & KHUÔN MẶT (THE BODY AND FACE) ---
-      { id: 1, vi: "khuôn mặt", en: "face", ipa: "/feɪs/", cat: "Cơ thể & Mặt" },
-      { id: 2, vi: "cơ thể", en: "body", ipa: "/ˈbɒd.i/", cat: "Cơ thể & Mặt" },
-      { id: 3, vi: "đầu", en: "head", ipa: "/hed/", cat: "Cơ thể & Mặt" },
-      { id: 4, vi: "tóc", en: "hair", ipa: "/heər/", cat: "Cơ thể & Mặt" },
-      { id: 5, vi: "mắt", en: "eye", ipa: "/aɪ/", cat: "Cơ thể & Mặt" },
-      { id: 6, vi: "mũi", en: "nose", ipa: "/nəʊz/", cat: "Cơ thể & Mặt" },
-      { id: 7, vi: "tai", en: "ear", ipa: "/ɪər/", cat: "Cơ thể & Mặt" },
-      { id: 8, vi: "miệng", en: "mouth", ipa: "/maʊθ/", cat: "Cơ thể & Mặt" },
-      { id: 9, vi: "nụ cười, cười", en: "smile", ipa: "/smaɪl/", cat: "Cơ thể & Mặt" },
-      { id: 10, vi: "cánh tay", en: "arm", ipa: "/ɑːm/", cat: "Cơ thể & Mặt" },
-      { id: 11, vi: "bàn tay", en: "hand", ipa: "/hænd/", cat: "Cơ thể & Mặt" },
-      { id: 12, vi: "ngón tay", en: "finger", ipa: "/ˈfɪŋ.ɡər/", cat: "Cơ thể & Mặt" },
-      { id: 13, vi: "chân", en: "leg", ipa: "/leɡ/", cat: "Cơ thể & Mặt" },
-      { id: 14, vi: "răng", en: "tooth", ipa: "/tuːθ/", cat: "Cơ thể & Mặt" },
-      { id: 15, vi: "bàn chân", en: "foot", ipa: "/fʊt/", cat: "Cơ thể & Mặt" },
-      { id: 16, vi: "đuôi", en: "tail", ipa: "/teɪl/", cat: "Cơ thể & Mặt" },
-      { id: 17, vi: "cánh", en: "wing", ipa: "/wɪŋ/", cat: "Cơ thể & Mặt" },
-      { id: 18, vi: "lưng", en: "back", ipa: "/bæk/", cat: "Cơ thể & Mặt" },
-      { id: 19, vi: "râu", en: "beard", ipa: "/bɪəd/", cat: "Cơ thể & Mặt" },
-      { id: 20, vi: "ria mép", en: "moustache", ipa: "/məˈstɑːʃ/", cat: "Cơ thể & Mặt" },
-      { id: 21, vi: "cổ", en: "neck", ipa: "/nek/", cat: "Cơ thể & Mặt" },
-      { id: 22, vi: "vai", en: "shoulder", ipa: "/ˈʃəʊl.dər/", cat: "Cơ thể & Mặt" },
-      { id: 23, vi: "dạ dày, bụng", en: "stomach", ipa: "/ˈstʌm.ək/", cat: "Cơ thể & Mặt" },
-      { id: 24, vi: "ngón chân", en: "toe", ipa: "/təʊ/", cat: "Cơ thể & Mặt" },
-      { id: 25, vi: "tóc vàng", en: "blond", ipa: "/blɒnd/", cat: "Cơ thể & Mặt" },
-      { id: 26, vi: "(tóc) xoăn", en: "curly", ipa: "/ˈkɜː.li/", cat: "Cơ thể & Mặt" },
-      { id: 27, vi: "tóc vàng hoe", en: "fair", ipa: "/feər/", cat: "Cơ thể & Mặt" },
-      { id: 28, vi: "(tóc) thẳng", en: "straight", ipa: "/streɪt/", cat: "Cơ thể & Mặt" },
-      { id: 29, vi: "mập, béo", en: "fat", ipa: "/fæt/", cat: "Cơ thể & Mặt" },
-      { id: 30, vi: "ốm, gầy", en: "thin", ipa: "/θɪn/", cat: "Cơ thể & Mặt" },
-      { id: 31, vi: "khuỷu tay", en: "elbow", ipa: "/ˈel.bəʊ/", cat: "Cơ thể & Mặt" },
-      { id: 32, vi: "đầu gối", en: "knee", ipa: "/niː/", cat: "Cơ thể & Mặt" },
+      // CHỦ ĐỀ 1: ĐỘNG VẬT (ANIMALS & NATURE)
+      { id: 1, vi: "động vật", en: "animal", ipa: "/ˈæn.ɪ.məl/", cat: "Động vật" },
+      { id: 2, vi: "thú cưng", en: "pet", ipa: "/pet/", cat: "Động vật" },
+      { id: 3, vi: "con gấu", en: "bear", ipa: "/beər/", cat: "Động vật" },
+      { id: 4, vi: "gấu bắc cực", en: "polar bear", ipa: "/ˌpəʊ.lə ˈbeər/", cat: "Động vật" },
+      { id: 5, vi: "con ong", en: "bee", ipa: "/biː/", cat: "Động vật" },
+      { id: 6, vi: "con chim", en: "bird", ipa: "/bɜːd/", cat: "Động vật" },
+      { id: 7, vi: "con mèo", en: "cat", ipa: "/kæt/", cat: "Động vật" },
+      { id: 8, vi: "con gà", en: "chicken", ipa: "/ˈtʃɪk.ɪn/", cat: "Động vật" },
+      { id: 9, vi: "con bò", en: "cow", ipa: "/kaʊ/", cat: "Động vật" },
+      { id: 10, vi: "cá sấu", en: "crocodile", ipa: "/ˈkrɒk.ə.daɪl/", cat: "Động vật" },
+      { id: 11, vi: "con chó", en: "dog", ipa: "/dɒɡ/", cat: "Động vật" },
+      { id: 12, vi: "con lừa", en: "donkey", ipa: "/ˈdɒŋ.ki/", cat: "Động vật" },
+      { id: 13, vi: "con vịt", en: "duck", ipa: "/dʌk/", cat: "Động vật" },
+      { id: 14, vi: "con voi", en: "elephant", ipa: "/ˈel.ɪ.fənt/", cat: "Động vật" },
 
-      // --- CHỦ ĐỀ 3: QUẦN ÁO (CLOTHES) ---
-      { id: 33, vi: "quần áo", en: "clothes", ipa: "/kləʊðz/", cat: "Quần áo" },
-      { id: 34, vi: "áo sơ mi", en: "shirt", ipa: "/ʃɜːt/", cat: "Quần áo" },
-      { id: 35, vi: "áo thun", en: "T-shirt", ipa: "/ˈtiː.ʃɜːt/", cat: "Quần áo" },
-      { id: 36, vi: "đầm, váy dài", en: "dress", ipa: "/dres/", cat: "Quần áo" },
-      { id: 37, vi: "chân váy", en: "skirt", ipa: "/skɜːt/", cat: "Quần áo" },
-      { id: 38, vi: "áo khoác ngắn", en: "jacket", ipa: "/ˈdʒæk.ɪt/", cat: "Quần áo" },
-      { id: 39, vi: "quần jean", en: "jeans", ipa: "/dʒiːnz/", cat: "Quần áo" },
-      { id: 40, vi: "quần dài", en: "trousers", ipa: "/ˈtraʊ.zəz/", cat: "Quần áo" },
-      { id: 41, vi: "quần sọoc", en: "shorts", ipa: "/ʃɔːts/", cat: "Quần áo" },
-      { id: 42, vi: "đôi giày", en: "shoes", ipa: "/ʃuːz/", cat: "Quần áo" },
-      { id: 43, vi: "giày ống cao", en: "boots", ipa: "/buːts/", cat: "Quần áo" },
-      { id: 44, vi: "vớ, tất", en: "socks", ipa: "/sɒks/", cat: "Quần áo" },
-      { id: 45, vi: "cặp, túi", en: "bag", ipa: "/bæɡ/", cat: "Quần áo" },
-      { id: 46, vi: "túi xách", en: "handbag", ipa: "/ˈhænd.bæɡ/", cat: "Quần áo" },
-      { id: 47, vi: "nón, mũ", en: "hat", ipa: "/hæt/", cat: "Quần áo" },
-      { id: 48, vi: "mắt kính", en: "glasses", ipa: "/ˈɡlɑː.sɪz/", cat: "Quần áo" },
-      { id: 49, vi: "đồng hồ đeo tay", en: "watch", ipa: "/wɒtʃ/", cat: "Quần áo" },
-      { id: 50, vi: "áo khoác dài", en: "coat", ipa: "/kəʊt/", cat: "Quần áo" },
-      { id: 51, vi: "khăn quàng cổ", en: "scarf", ipa: "/skɑːf/", cat: "Quần áo" },
-      { id: 52, vi: "áo len dài tay", en: "sweater", ipa: "/ˈswet.ər/", cat: "Quần áo" },
-      { id: 53, vi: "mũ bảo hiểm", en: "helmet", ipa: "/ˈhel.mət/", cat: "Quần áo" },
-      { id: 54, vi: "đồ bơi", en: "swimsuit", ipa: "/ˈswɪm.suːt/", cat: "Quần áo" },
-      { id: 55, vi: "đồng phục", en: "uniform", ipa: "/ˈjuː.nɪ.fɔːm/", cat: "Quần áo" },
-      { id: 56, vi: "trang phục", en: "costume", ipa: "/ˈkɒs.tʃuːm/", cat: "Quần áo" },
-      { id: 57, vi: "thắt lưng, dây nịt", en: "belt", ipa: "/belt/", cat: "Quần áo" },
-      { id: 58, vi: "găng tay", en: "glove", ipa: "/ɡlʌv/", cat: "Quần áo" },
-      { id: 59, vi: "dây chuyền", en: "necklace", ipa: "/ˈnek.ləs/", cat: "Quần áo" },
-      { id: 60, vi: "vòng đeo tay", en: "bracelet", ipa: "/ˈbreɪ.slət/", cat: "Quần áo" },
-      { id: 61, vi: "nhẫn", en: "ring", ipa: "/rɪŋ/", cat: "Quần áo" },
-      { id: 62, vi: "kính mát", en: "sunglasses", ipa: "/ˈsʌnˌɡlɑː.sɪz/", cat: "Quần áo" },
-      { id: 63, vi: "quần áo bó", en: "tights", ipa: "/taɪts/", cat: "Quần áo" },
-      { id: 64, vi: "túi quần, túi áo", en: "pocket", ipa: "/ˈpɒk.ɪt/", cat: "Quần áo" },
-      { id: 65, vi: "đồ ngủ", en: "pajamas", ipa: "/pəˈdʒɑː.məz/", cat: "Quần áo" },
-      { id: 66, vi: "chấm bi (họa tiết)", en: "spot", ipa: "/spɒt/", cat: "Quần áo" },
-      { id: 67, vi: "có chấm bi", en: "spotted", ipa: "/ˈspɒt.ɪd/", cat: "Quần áo" },
-      { id: 68, vi: "sọc (họa tiết)", en: "stripe", ipa: "/straɪp/", cat: "Quần áo" },
-      { id: 69, vi: "có sọc", en: "striped", ipa: "/straɪpt/", cat: "Quần áo" },
-      { id: 70, vi: "cây dù", en: "umbrella", ipa: "/ʌmˈbrel.ə/", cat: "Quần áo" },
-      { id: 71, vi: "vương miện", en: "crown", ipa: "/kraʊn/", cat: "Quần áo" },
+      // CHỦ ĐỀ 2: CƠ THỂ & KHUÔN MẶT (THE BODY AND FACE)
+      { id: 15, vi: "khuôn mặt", en: "face", ipa: "/feɪs/", cat: "Cơ thể & Mặt" },
+      { id: 16, vi: "cơ thể", en: "body", ipa: "/ˈbɒd.i/", cat: "Cơ thể & Mặt" },
+      { id: 17, vi: "đầu", en: "head", ipa: "/hed/", cat: "Cơ thể & Mặt" },
+      { id: 18, vi: "tóc", en: "hair", ipa: "/heər/", cat: "Cơ thể & Mặt" },
+      { id: 19, vi: "mắt", en: "eye", ipa: "/aɪ/", cat: "Cơ thể & Mặt" },
+      { id: 20, vi: "mũi", en: "nose", ipa: "/nəʊz/", cat: "Cơ thể & Mặt" },
+      { id: 21, vi: "tai", en: "ear", ipa: "/ɪər/", cat: "Cơ thể & Mặt" },
+      { id: 22, vi: "miệng", en: "mouth", ipa: "/maʊθ/", cat: "Cơ thể & Mặt" },
+      { id: 23, vi: "nụ cười, cười", en: "smile", ipa: "/smaɪl/", cat: "Cơ thể & Mặt" },
+      { id: 24, vi: "cánh tay", en: "arm", ipa: "/ɑːm/", cat: "Cơ thể & Mặt" },
+      { id: 25, vi: "bàn tay", en: "hand", ipa: "/hænd/", cat: "Cơ thể & Mặt" },
+      { id: 26, vi: "ngón tay", en: "finger", ipa: "/ˈfɪŋ.ɡər/", cat: "Cơ thể & Mặt" },
+      { id: 27, vi: "chân", en: "leg", ipa: "/leɡ/", cat: "Cơ thể & Mặt" },
+      { id: 28, vi: "răng", en: "tooth", ipa: "/tuːθ/", cat: "Cơ thể & Mặt" },
+      { id: 29, vi: "bàn chân", en: "foot", ipa: "/fʊt/", cat: "Cơ thể & Mặt" },
+      { id: 30, vi: "lưng", en: "back", ipa: "/bæk/", cat: "Cơ thể & Mặt" },
+      { id: 31, vi: "râu", en: "beard", ipa: "/bɪəd/", cat: "Cơ thể & Mặt" },
+      { id: 32, vi: "ria mép", en: "moustache", ipa: "/məˈstɑːʃ/", cat: "Cơ thể & Mặt" },
+      { id: 33, vi: "cổ", en: "neck", ipa: "/nek/", cat: "Cơ thể & Mặt" },
+      { id: 34, vi: "vai", en: "shoulder", ipa: "/ˈʃəʊl.dər/", cat: "Cơ thể & Mặt" },
+      { id: 35, vi: "dạ dày, bụng", en: "stomach", ipa: "/ˈstʌm.ək/", cat: "Cơ thể & Mặt" },
+      { id: 36, vi: "ngón chân", en: "toe", ipa: "/təʊ/", cat: "Cơ thể & Mặt" },
+      { id: 37, vi: "tóc vàng", en: "blond", ipa: "/blɒnd/", cat: "Cơ thể & Mặt" },
+      { id: 38, vi: "(tóc) xoăn", en: "curly", ipa: "/ˈkɜː.li/", cat: "Cơ thể & Mặt" },
+      { id: 39, vi: "tóc vàng hoe", en: "fair", ipa: "/feər/", cat: "Cơ thể & Mặt" },
+      { id: 40, vi: "(tóc) thẳng", en: "straight", ipa: "/streɪt/", cat: "Cơ thể & Mặt" },
+      { id: 41, vi: "mập, béo", en: "fat", ipa: "/fæt/", cat: "Cơ thể & Mặt" },
+      { id: 42, vi: "ốm, gầy", en: "thin", ipa: "/θɪn/", cat: "Cơ thể & Mặt" },
+      { id: 43, vi: "khuỷu tay", en: "elbow", ipa: "/ˈel.bəʊ/", cat: "Cơ thể & Mặt" },
+      { id: 44, vi: "đầu gối", en: "knee", ipa: "/niː/", cat: "Cơ thể & Mặt" },
 
-      // --- CHỦ ĐỀ 4: MÀU SẮC (COLOURS / COLORS) ---
-      { id: 72, vi: "xanh dương", en: "blue", ipa: "/bluː/", cat: "Màu sắc" },
-      { id: 73, vi: "xanh lá", en: "green", ipa: "/ɡriːn/", cat: "Màu sắc" },
-      { id: 74, vi: "đỏ", en: "red", ipa: "/red/", cat: "Màu sắc" },
-      { id: 75, vi: "hồng", en: "pink", ipa: "/pɪŋk/", cat: "Màu sắc" },
-      { id: 76, vi: "tím", en: "purple", ipa: "/ˈpɜː.pəl/", cat: "Màu sắc" },
-      { id: 77, vi: "vàng", en: "yellow", ipa: "/ˈjel.əʊ/", cat: "Màu sắc" },
-      { id: 78, vi: "cam", en: "orange", ipa: "/ˈɒr.ɪndʒ/", cat: "Màu sắc" },
-      { id: 79, vi: "đen", en: "black", ipa: "/blæk/", cat: "Màu sắc" },
-      { id: 80, vi: "trắng", en: "white", ipa: "/waɪt/", cat: "Màu sắc" },
-      { id: 81, vi: "nâu", en: "brown", ipa: "/braʊn/", cat: "Màu sắc" },
-      { id: 82, vi: "xám", en: "grey", ipa: "/ɡreɪ/", cat: "Màu sắc" },
-      { id: 83, vi: "màu sáng, tươi", en: "bright", ipa: "/braɪt/", cat: "Màu sắc" },
-      { id: 84, vi: "màu vàng kim", en: "gold", ipa: "/ɡəʊld/", cat: "Màu sắc" },
-      { id: 85, vi: "màu bạc", en: "silver", ipa: "/ˈsɪl.vər/", cat: "Màu sắc" },
+      // CHỦ ĐỀ 3: QUẦN ÁO (CLOTHES)
+      { id: 45, vi: "quần áo", en: "clothes", ipa: "/kləʊðz/", cat: "Quần áo" },
+      { id: 46, vi: "áo sơ mi", en: "shirt", ipa: "/ʃɜːt/", cat: "Quần áo" },
+      { id: 47, vi: "áo thun", en: "T-shirt", ipa: "/ˈtiː.ʃɜːt/", cat: "Quần áo" },
+      { id: 48, vi: "đầm, váy dài", en: "dress", ipa: "/dres/", cat: "Quần áo" },
+      { id: 49, vi: "chân váy", en: "skirt", ipa: "/skɜːt/", cat: "Quần áo" },
+      { id: 50, vi: "áo khoác ngắn", en: "jacket", ipa: "/ˈdʒæk.ɪt/", cat: "Quần áo" },
+      { id: 51, vi: "quần jean", en: "jeans", ipa: "/dʒiːnz/", cat: "Quần áo" },
+      { id: 52, vi: "quần dài", en: "trousers", ipa: "/ˈtraʊ.zəz/", cat: "Quần áo" },
+      { id: 53, vi: "quần sọoc", en: "shorts", ipa: "/ʃɔːts/", cat: "Quần áo" },
+      { id: 54, vi: "đôi giày", en: "shoes", ipa: "/ʃuːz/", cat: "Quần áo" },
+      { id: 55, vi: "giày ống cao", en: "boots", ipa: "/buːts/", cat: "Quần áo" },
+      { id: 56, vi: "vớ, tất", en: "socks", ipa: "/sɒks/", cat: "Quần áo" },
+      { id: 57, vi: "cặp, túi", en: "bag", ipa: "/bæɡ/", cat: "Quần áo" },
+      { id: 58, vi: "túi xách", en: "handbag", ipa: "/ˈhænd.bæɡ/", cat: "Quần áo" },
+      { id: 59, vi: "nón, mũ", en: "hat", ipa: "/hæt/", cat: "Quần áo" },
+      { id: 60, vi: "mắt kính", en: "glasses", ipa: "/ˈɡlɑː.sɪz/", cat: "Quần áo" },
+      { id: 61, vi: "đồng hồ đeo tay", en: "watch", ipa: "/wɒtʃ/", cat: "Quần áo" },
+      { id: 62, vi: "áo khoác dài", en: "coat", ipa: "/kəʊt/", cat: "Quần áo" },
+      { id: 63, vi: "khăn quàng cổ", en: "scarf", ipa: "/skɑːf/", cat: "Quần áo" },
+      { id: 64, vi: "áo len dài tay", en: "sweater", ipa: "/ˈswet.ər/", cat: "Quần áo" },
+      { id: 65, vi: "mũ bảo hiểm", en: "helmet", ipa: "/ˈhel.mət/", cat: "Quần áo" },
+      { id: 66, vi: "đồ bơi", en: "swimsuit", ipa: "/ˈswɪm.suːt/", cat: "Quần áo" },
+      { id: 67, vi: "đồng phục", en: "uniform", ipa: "/ˈjuː.nɪ.fɔːm/", cat: "Quần áo" },
+      { id: 68, vi: "trang phục", en: "costume", ipa: "/ˈkɒs.tʃuːm/", cat: "Quần áo" },
+      { id: 69, vi: "thắt lưng", en: "belt", ipa: "/belt/", cat: "Quần áo" },
+      { id: 70, vi: "găng tay", en: "glove", ipa: "/ɡlʌv/", cat: "Quần áo" },
+      { id: 71, vi: "dây chuyền", en: "necklace", ipa: "/ˈnek.ləs/", cat: "Quần áo" },
+      { id: 72, vi: "vòng đeo tay", en: "bracelet", ipa: "/ˈbreɪ.slət/", cat: "Quần áo" },
+      { id: 73, vi: "nhẫn", en: "ring", ipa: "/rɪŋ/", cat: "Quần áo" },
+      { id: 74, vi: "kính mát", en: "sunglasses", ipa: "/ˈsʌnˌɡlɑː.sɪz/", cat: "Quần áo" },
+      { id: 75, vi: "quần áo bó", en: "tights", ipa: "/taɪts/", cat: "Quần áo" },
+      { id: 76, vi: "túi quần, túi áo", en: "pocket", ipa: "/ˈpɒk.ɪt/", cat: "Quần áo" },
+      { id: 77, vi: "đồ ngủ", en: "pajamas", ipa: "/pəˈdʒɑː.məz/", cat: "Quần áo" },
+      { id: 78, vi: "chấm bi", en: "spot", ipa: "/spɒt/", cat: "Quần áo" },
+      { id: 79, vi: "sọc", en: "stripe", ipa: "/straɪp/", cat: "Quần áo" },
+      { id: 80, vi: "cây dù", en: "umbrella", ipa: "/ʌmˈbrel.ə/", cat: "Quần áo" },
+      { id: 81, vi: "vương miện", en: "crown", ipa: "/kraʊn/", cat: "Quần áo" },
 
-      // --- CHỦ ĐỀ 5: GIA ĐÌNH & BẠN BÈ (FAMILY & FRIENDS) ---
-      { id: 86, vi: "gia đình", en: "family", ipa: "/ˈfæm.əl.i/", cat: "Gia đình & Bạn bè" },
-      { id: 87, vi: "bố, ba", en: "father", ipa: "/ˈfɑː.ðər/", cat: "Gia đình & Bạn bè" },
-      { id: 88, vi: "mẹ", en: "mother", ipa: "/ˈmʌð.ər/", cat: "Gia đình & Bạn bè" },
-      { id: 89, vi: "anh/em trai", en: "brother", ipa: "/ˈbrʌð.ər/", cat: "Gia đình & Bạn bè" },
-      { id: 90, vi: "chị/em gái", en: "sister", ipa: "/ˈsɪs.tər/", cat: "Gia đình & Bạn bè" },
-      { id: 91, vi: "ông", en: "grandfather", ipa: "/ˈɡræn.fɑː.ðər/", cat: "Gia đình & Bạn bè" },
-      { id: 92, vi: "bà", en: "grandmother", ipa: "/ˈɡræn.mʌð.ər/", cat: "Gia đình & Bạn bè" },
-      { id: 93, vi: "anh/chị/em họ", en: "cousin", ipa: "/ˈkʌz.ən/", cat: "Gia đình & Bạn bè" },
-      { id: 94, vi: "em bé", en: "baby", ipa: "/ˈbeɪ.bi/", cat: "Gia đình & Bạn bè" },
-      { id: 95, vi: "người bạn", en: "friend", ipa: "/frend/", cat: "Gia đình & Bạn bè" },
-      { id: 96, vi: "bạn cùng lớp", en: "classmate", ipa: "/ˈklɑːs.meɪt/", cat: "Gia đình & Bạn bè" },
-      { id: 97, vi: "cậu bé", en: "boy", ipa: "/bɔɪ/", cat: "Gia đình & Bạn bè" },
-      { id: 98, vi: "cô bé", en: "girl", ipa: "/ɡɜːl/", cat: "Gia đình & Bạn bè" },
-      { id: 99, vi: "đứa trẻ", en: "child", ipa: "/tʃaɪld/", cat: "Gia đình & Bạn bè" },
-      { id: 100, vi: "đứa trẻ", en: "kid", ipa: "/kɪd/", cat: "Gia đình & Bạn bè" },
-      { id: 101, vi: "đàn ông", en: "man", ipa: "/mæn/", cat: "Gia đình & Bạn bè" },
-      { id: 102, vi: "phụ nữ", en: "woman", ipa: "/ˈwʊm.ən/", cat: "Gia đình & Bạn bè" },
-      { id: 103, vi: "con người", en: "person", ipa: "/ˈpɜː.sən/", cat: "Gia đình & Bạn bè" },
-      { id: 104, vi: "sống", en: "live", ipa: "/lɪv/", cat: "Gia đình & Bạn bè" },
-      { id: 105, vi: "vợ", en: "wife", ipa: "/waɪf/", cat: "Gia đình & Bạn bè" },
-      { id: 106, vi: "chồng", en: "husband", ipa: "/ˈhʌz.bənd/", cat: "Gia đình & Bạn bè" },
-      { id: 107, vi: "ba / mẹ", en: "parent", ipa: "/ˈpeə.rənt/", cat: "Gia đình & Bạn bè" },
-      { id: 108, vi: "con gái", en: "daughter", ipa: "/ˈdɔː.tər/", cat: "Gia đình & Bạn bè" },
-      { id: 109, vi: "con trai", en: "son", ipa: "/sʌn/", cat: "Gia đình & Bạn bè" },
-      { id: 110, vi: "bạn thân", en: "best friend", ipa: "/best frend/", cat: "Gia đình & Bạn bè" },
-      { id: 111, vi: "ông bà", en: "grandparents", ipa: "/ˈɡræn.peə.rənts/", cat: "Gia đình & Bạn bè" },
-      { id: 112, vi: "cô, dì, thím", en: "aunt", ipa: "/ɑːnt/", cat: "Gia đình & Bạn bè" },
-      { id: 113, vi: "chú, bác, cậu", en: "uncle", ipa: "/ˈʌŋ.kəl/", cat: "Gia đình & Bạn bè" },
-      { id: 114, vi: "cháu", en: "grandchild", ipa: "/ˈɡræn.tʃaɪld/", cat: "Gia đình & Bạn bè" },
-      { id: 115, vi: "cháu gái", en: "granddaughter", ipa: "/ˈɡræn.dɔː.tər/", cat: "Gia đình & Bạn bè" },
-      { id: 116, vi: "cháu trai", en: "grandson", ipa: "/ˈɡræn.sʌn/", cat: "Gia đình & Bạn bè" },
-      { id: 117, vi: "người lớn", en: "grown-up", ipa: "/ˈɡrəʊn.ʌp/", cat: "Gia đình & Bạn bè" },
-      { id: 118, vi: "kết hôn", en: "get married", ipa: "/ɡet ˈmær.id/", cat: "Gia đình & Bạn bè" },
-      { id: 119, vi: "đối tác, cộng sự", en: "partner", ipa: "/ˈpɑːt.nər/", cat: "Gia đình & Bạn bè" },
-      { id: 120, vi: "họ (họ và tên)", en: "surname", ipa: "/ˈsɜː.neɪm/", cat: "Gia đình & Bạn bè" }
+      // CHỦ ĐỀ 4: MÀU SẮC (COLOURS)
+      { id: 82, vi: "xanh dương", en: "blue", ipa: "/bluː/", cat: "Màu sắc" },
+      { id: 83, vi: "xanh lá", en: "green", ipa: "/ɡriːn/", cat: "Màu sắc" },
+      { id: 84, vi: "đỏ", en: "red", ipa: "/red/", cat: "Màu sắc" },
+      { id: 85, vi: "hồng", en: "pink", ipa: "/pɪŋk/", cat: "Màu sắc" },
+      { id: 86, vi: "tím", en: "purple", ipa: "/ˈpɜː.pəl/", cat: "Màu sắc" },
+      { id: 87, vi: "vàng", en: "yellow", ipa: "/ˈjel.əʊ/", cat: "Màu sắc" },
+      { id: 88, vi: "cam", en: "orange", ipa: "/ˈɒr.ɪndʒ/", cat: "Màu sắc" },
+      { id: 89, vi: "đen", en: "black", ipa: "/blæk/", cat: "Màu sắc" },
+      { id: 90, vi: "trắng", en: "white", ipa: "/waɪt/", cat: "Màu sắc" },
+      { id: 91, vi: "nâu", en: "brown", ipa: "/braʊn/", cat: "Màu sắc" },
+      { id: 92, vi: "xám", en: "grey", ipa: "/ɡreɪ/", cat: "Màu sắc" },
+      { id: 93, vi: "màu sáng", en: "bright", ipa: "/braɪt/", cat: "Màu sắc" },
+      { id: 94, vi: "màu vàng kim", en: "gold", ipa: "/ɡəʊld/", cat: "Màu sắc" },
+      { id: 95, vi: "màu bạc", en: "silver", ipa: "/ˈsɪl.vər/", cat: "Màu sắc" },
+
+      // CHỦ ĐỀ 5: GIA ĐÌNH & BẠN BÈ (FAMILY & FRIENDS)
+      { id: 96, vi: "gia đình", en: "family", ipa: "/ˈfæm.əl.i/", cat: "Gia đình & Bạn bè" },
+      { id: 97, vi: "bố, ba", en: "father", ipa: "/ˈfɑː.ðər/", cat: "Gia đình & Bạn bè" },
+      { id: 98, vi: "mẹ", en: "mother", ipa: "/ˈmʌð.ər/", cat: "Gia đình & Bạn bè" },
+      { id: 99, vi: "anh/em trai", en: "brother", ipa: "/ˈbrʌð.ər/", cat: "Gia đình & Bạn bè" },
+      { id: 100, vi: "chị/em gái", en: "sister", ipa: "/ˈsɪs.tər/", cat: "Gia đình & Bạn bè" },
+      { id: 101, vi: "ông", en: "grandfather", ipa: "/ˈɡræn.fɑː.ðər/", cat: "Gia đình & Bạn bè" },
+      { id: 102, vi: "bà", en: "grandmother", ipa: "/ˈɡræn.mʌð.ər/", cat: "Gia đình & Bạn bè" },
+      { id: 103, vi: "anh/chị/em họ", en: "cousin", ipa: "/ˈkʌz.ən/", cat: "Gia đình & Bạn bè" },
+      { id: 104, vi: "em bé", en: "baby", ipa: "/ˈbeɪ.bi/", cat: "Gia đình & Bạn bè" },
+      { id: 105, vi: "người bạn", en: "friend", ipa: "/frend/", cat: "Gia đình & Bạn bè" },
+      { id: 106, vi: "bạn cùng lớp", en: "classmate", ipa: "/ˈklɑːs.meɪt/", cat: "Gia đình & Bạn bè" },
+      { id: 107, vi: "cậu bé", en: "boy", ipa: "/bɔɪ/", cat: "Gia đình & Bạn bè" },
+      { id: 108, vi: "cô bé", en: "girl", ipa: "/ɡɜːl/", cat: "Gia đình & Bạn bè" },
+      { id: 109, vi: "đứa trẻ", en: "child", ipa: "/tʃaɪld/", cat: "Gia đình & Bạn bè" },
+      { id: 110, vi: "đàn ông", en: "man", ipa: "/mæn/", cat: "Gia đình & Bạn bè" },
+      { id: 111, vi: "phụ nữ", en: "woman", ipa: "/ˈwʊm.ən/", cat: "Gia đình & Bạn bè" },
+      { id: 112, vi: "vợ", en: "wife", ipa: "/waɪf/", cat: "Gia đình & Bạn bè" },
+      { id: 113, vi: "chồng", en: "husband", ipa: "/ˈhʌz.bənd/", cat: "Gia đình & Bạn bè" },
+      { id: 114, vi: "ba / mẹ", en: "parent", ipa: "/ˈpeə.rənt/", cat: "Gia đình & Bạn bè" },
+      { id: 115, vi: "con gái", en: "daughter", ipa: "/ˈdɔː.tər/", cat: "Gia đình & Bạn bè" },
+      { id: 116, vi: "con trai", en: "son", ipa: "/sʌn/", cat: "Gia đình & Bạn bè" },
+      { id: 117, vi: "bạn thân", en: "best friend", ipa: "/best frend/", cat: "Gia đình & Bạn bè" },
+      { id: 118, vi: "ông bà", en: "grandparents", ipa: "/ˈɡræn.peə.rənts/", cat: "Gia đình & Bạn bè" },
+      { id: 119, vi: "cô, dì, thím", en: "aunt", ipa: "/ɑːnt/", cat: "Gia đình & Bạn bè" },
+      { id: 120, vi: "chú, bác", en: "uncle", ipa: "/ˈʌŋ.kəl/", cat: "Gia đình & Bạn bè" }
     ];
 
     let currentStudent = null;
@@ -521,8 +524,8 @@
     let typingActive = false, typingScore = 0, typingStreak = 0, typingTimer = null, typingTimeLeft = 20, currentTypingWord = null;
 
     let englishVoice = null;
-    const KEY_STUDENT = "vocab_student_info_v4";
-    const KEY_SCORES = "vocab_high_scores_v4";
+    const KEY_STUDENT = "vocab_student_info_v5";
+    const KEY_SCORES = "vocab_high_scores_v5";
 
     window.addEventListener("DOMContentLoaded", () => {
       const ua = navigator.userAgent || navigator.vendor || window.opera;
@@ -566,6 +569,7 @@
       
       const activeIdMap = {
         'all': 'catbtn-all',
+        'Động vật': 'catbtn-animals',
         'Cơ thể & Mặt': 'catbtn-body',
         'Quần áo': 'catbtn-clothes',
         'Màu sắc': 'catbtn-colours',
@@ -1020,7 +1024,7 @@
       });
     }
 
-    // TEACHER ADMIN FUNCTIONS
+    // TEACHER ADMIN FUNCTIONS (MÃ PIN MỚI: 9999)
     function openTeacherAdmin() {
       document.getElementById("teacherModal").classList.remove("hidden");
     }
@@ -1031,7 +1035,8 @@
 
     function verifyTeacherPin() {
       const pin = document.getElementById("teacherPinInput").value.trim();
-      if (pin === "1234") {
+      // KIỂM TRA MÃ PIN 9999
+      if (pin === "9999") {
         document.getElementById("teacherPinContainer").classList.add("hidden");
         document.getElementById("teacherContent").classList.remove("hidden");
         
@@ -1046,7 +1051,7 @@
           sheetBtn.classList.add("opacity-50", "pointer-events-none");
         }
       } else {
-        alert("Mã PIN không chính xác! (Mặc định là: 1234)");
+        alert("Mã PIN không chính xác! (Mặc định là: 9999)");
       }
     }
 
