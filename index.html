@@ -1044,7 +1044,7 @@
         document.getElementById("teacherTotalStudents").textContent = `${scores.length} học sinh`;
         
         const sheetBtn = document.getElementById("btnOpenGoogleSheet");
-        if (GOOGLE_SHEET_URL.startsWith("http")) {
+        if (GOOGLE_SHEET_URL.startsWith("https://script.google.com/macros/s/AKfycbypljDW79mkKMEBKCQQq7jlB5Cud5wbxqMQosS_mcy1SFZyzRESPJna8LIMa-X5cXEL1g/exec")) {
           sheetBtn.href = GOOGLE_SHEET_URL;
         } else {
           sheetBtn.innerText = "Chưa dán Link Google Sheet vào Code";
